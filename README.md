@@ -23,7 +23,7 @@ A modern SaaS platform for generating stunning portfolio websites. Upload your r
 | **Frontend** | Next.js 14, TypeScript, TailwindCSS, Framer Motion |
 | **Backend** | Supabase (PostgreSQL), Next.js API Routes |
 | **Auth** | Custom JWT + OTP via Brevo Email |
-| **AI** | Google Gemini (Resume Parsing) |
+
 
 ## � Quick Start
 
