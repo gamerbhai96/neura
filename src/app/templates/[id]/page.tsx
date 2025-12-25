@@ -2,8 +2,6 @@
 
 import { notFound, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { User } from '@supabase/supabase-js';
 import { Sparkles, ArrowLeft, Download } from 'lucide-react';
 import Link from 'next/link';
 import CyberpunkNeonPage from '@/components/templates/developer/cyberpunk-neon/Page';
@@ -47,6 +45,12 @@ import GradientWavesPage from '@/components/templates/developer/gradient-waves/P
 import NeonGridPage from '@/components/templates/developer/neon-grid/Page';
 import RetroComicPage from '@/components/templates/developer/retro-comic/Page';
 import PixelArtPage from '@/components/templates/developer/pixel-art/Page';
+
+interface AuthUser {
+    id: string;
+    email: string;
+    name: string | null;
+}
 
 const templateComponents: Record<string, React.ComponentType<any>> = {
     'cyberpunk-neon': CyberpunkNeonPage,
@@ -94,7 +98,7 @@ const templateComponents: Record<string, React.ComponentType<any>> = {
 
 export default function TemplatePreviewPage({ params, searchParams }: { params: { id: string }, searchParams?: { siteId?: string } }) {
     const router = useRouter();
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState(true);
     const [portfolioData, setPortfolioData] = useState<any>(null);
     const [siteId, setSiteId] = useState<string | null>(null);
@@ -118,10 +122,18 @@ export default function TemplatePreviewPage({ params, searchParams }: { params: 
     }, [searchParams?.siteId]);
 
     const checkAuth = async () => {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-        console.log('👤 User auth status:', user ? 'logged in' : 'not logged in');
+        try {
+            const response = await fetch('/api/auth/me');
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.user);
+                console.log('👤 User auth status: logged in');
+            } else {
+                console.log('👤 User auth status: not logged in');
+            }
+        } catch (error) {
+            console.error('Auth check error:', error);
+        }
     };
 
     const loadPortfolioData = async (id: string) => {
