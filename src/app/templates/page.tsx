@@ -60,6 +60,27 @@ const templates = [
     { id: 'neon-grid', name: 'Neon Grid', category: 'developer', color: 'from-cyan-500 to-fuchsia-500', isNew: true },
     { id: 'retro-comic', name: 'Retro Comic', category: 'creative', color: 'from-red-500 to-yellow-400', isNew: true, isPopular: true },
     { id: 'pixel-art', name: 'Pixel Art', category: 'developer', color: 'from-indigo-700 to-pink-600', isNew: true },
+    // New 20 Creative Templates
+    { id: 'watercolor-splash', name: 'Watercolor Splash', category: 'creative', color: 'from-pink-300 via-purple-300 to-blue-300', isNew: true },
+    { id: 'origami-paper', name: 'Origami Paper', category: 'creative', color: 'from-rose-200 to-amber-200', isNew: true },
+    { id: 'underwater-ocean', name: 'Underwater Ocean', category: 'creative', color: 'from-blue-600 to-cyan-400', isNew: true },
+    { id: 'steampunk-brass', name: 'Steampunk Brass', category: 'creative', color: 'from-amber-600 to-yellow-800', isNew: true },
+    { id: 'neon-tokyo', name: 'Neon Tokyo', category: 'developer', color: 'from-pink-500 to-cyan-400', isNew: true },
+    { id: 'art-deco-gold', name: 'Art Deco Gold', category: 'creative', color: 'from-yellow-500 to-amber-700', isNew: true },
+    { id: 'polaroid-memories', name: 'Polaroid Memories', category: 'creative', color: 'from-amber-100 to-stone-300', isNew: true },
+    { id: 'arcade-cabinet', name: 'Arcade Cabinet', category: 'developer', color: 'from-purple-600 to-pink-500', isNew: true },
+    { id: 'candy-pop', name: 'Candy Pop', category: 'creative', color: 'from-pink-400 to-yellow-300', isNew: true },
+    { id: 'industrial-steel', name: 'Industrial Steel', category: 'developer', color: 'from-zinc-600 to-yellow-500', isNew: true },
+    { id: 'botanical-garden', name: 'Botanical Garden', category: 'creative', color: 'from-green-400 to-emerald-600', isNew: true },
+    { id: 'cosmic-nebula', name: 'Cosmic Nebula', category: 'creative', color: 'from-purple-600 to-pink-500', isNew: true },
+    { id: 'vintage-radio', name: 'Vintage Radio', category: 'creative', color: 'from-amber-500 to-orange-700', isNew: true },
+    { id: 'chalkboard-school', name: 'Chalkboard School', category: 'creative', color: 'from-green-900 to-green-950', isNew: true },
+    { id: 'lava-lamp', name: 'Lava Lamp', category: 'creative', color: 'from-pink-500 to-orange-500', isNew: true },
+    { id: 'circuit-board', name: 'Circuit Board', category: 'developer', color: 'from-green-600 to-green-900', isNew: true },
+    { id: 'stained-glass', name: 'Stained Glass', category: 'creative', color: 'from-red-500 via-amber-400 to-blue-500', isNew: true },
+    { id: 'cassette-tape', name: 'Cassette Tape', category: 'creative', color: 'from-orange-400 to-amber-600', isNew: true },
+    { id: 'graffiti-street', name: 'Graffiti Street', category: 'creative', color: 'from-pink-500 via-yellow-400 to-cyan-400', isNew: true },
+    { id: 'retro-diner', name: 'Retro Diner', category: 'creative', color: 'from-rose-500 to-cyan-400', isNew: true },
 ];
 
 export default function TemplatesPage() {

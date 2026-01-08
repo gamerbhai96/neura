@@ -1,188 +1,384 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
-import { Sparkles, Mail, Github, Linkedin, ExternalLink } from 'lucide-react';
+import { Mail, Github, Linkedin, Mountain, Snowflake, Wind, Thermometer } from 'lucide-react';
 import { PortfolioData } from '../../types';
 
 const mockData: PortfolioData = {
     name: "Aurora Dev",
-    role: "Creative Developer",
+    role: "Data Engineer",
     email: "dev@aurora.io",
     phone: "+1 555 000 0000",
-    location: "Northern Lights",
-    bio: "Creating magical experiences inspired by nature's most beautiful phenomenon.",
-    skills: ["React", "Next.js", "TypeScript", "Three.js", "WebGL", "Tailwind", "Node.js", "Python"],
-    experience: [{ company: "Aurora Labs", position: "Lead Developer", startDate: "2020", endDate: "Present", description: "Building", highlights: [] }],
+    location: "Reykjavik, Iceland",
+    bio: "Dancing with data like the northern lights dance across the Arctic sky.",
+    skills: ["Python", "Spark", "Kubernetes", "PostgreSQL", "Redis", "Kafka", "AWS", "Terraform"],
+    experience: [{ company: "Polar Data Labs", position: "Staff Engineer", startDate: "2019", endDate: "Present", description: "Building data pipelines at scale", highlights: [] }],
     education: [
-        { school: "Tech University", degree: "MS Computer Science", field: "CS", startDate: "2018", endDate: "2020" }
+        { school: "Nordic University", degree: "MS Data Science", field: "Data Science", startDate: "2015", endDate: "2017" }
     ],
     projects: [
-        { name: "Northern Lights", description: "Interactive aurora visualization", technologies: ["Three.js", "WebGL"] },
-        { name: "Polar Dashboard", description: "Analytics platform", technologies: ["React", "D3.js"] }
+        { name: "Polaris", description: "Real-time data streaming", technologies: ["Kafka", "Spark"] },
+        { name: "Glacier", description: "Cold storage optimizer", technologies: ["S3", "Python"] }
     ],
     links: { github: "https://github.com", linkedin: "https://linkedin.com" }
 };
 
+// Aurora wave effect
+const AuroraWave = ({ color, delay, blur, y }: { color: string; delay: number; blur: number; y: string }) => (
+    <motion.div
+        className="absolute w-[200%] h-48 pointer-events-none"
+        style={{
+            left: '-50%',
+            top: y,
+            background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
+            filter: `blur(${blur}px)`,
+            opacity: 0.5
+        }}
+        animate={{
+            x: ['-20%', '20%', '-20%'],
+            skewX: [-10, 10, -10],
+            scaleY: [1, 1.5, 1]
+        }}
+        transition={{
+            duration: 8 + delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay
+        }}
+    />
+);
+
+// Stars field
+const StarField = () => (
+    <div className="fixed inset-0 pointer-events-none">
+        {[...Array(100)].map((_, i) => (
+            <motion.div
+                key={i}
+                className="absolute rounded-full bg-white"
+                style={{
+                    width: Math.random() * 2 + 1,
+                    height: Math.random() * 2 + 1,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 60}%`,
+                }}
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{
+                    duration: 2 + Math.random() * 3,
+                    repeat: Infinity,
+                    delay: Math.random() * 2
+                }}
+            />
+        ))}
+    </div>
+);
+
+// Snow particle
+const Snowfall = () => (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {[...Array(40)].map((_, i) => (
+            <motion.div
+                key={i}
+                className="absolute rounded-full bg-white/80"
+                style={{
+                    width: 2 + Math.random() * 4,
+                    height: 2 + Math.random() * 4,
+                    left: `${Math.random() * 100}%`,
+                    top: -20
+                }}
+                animate={{
+                    y: ['0vh', '110vh'],
+                    x: [0, Math.sin(i) * 50, 0]
+                }}
+                transition={{
+                    duration: 8 + Math.random() * 6,
+                    repeat: Infinity,
+                    delay: Math.random() * 10,
+                    ease: "linear"
+                }}
+            />
+        ))}
+    </div>
+);
+
+// Mountain silhouette
+const Mountains = () => (
+    <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-10">
+        <svg viewBox="0 0 1440 300" className="w-full h-48" preserveAspectRatio="none">
+            {/* Back mountain layer */}
+            <path
+                d="M0,300 L0,180 L200,100 L400,200 L600,80 L800,150 L1000,60 L1200,140 L1440,100 L1440,300 Z"
+                fill="#1a1a3e"
+            />
+            {/* Front mountain layer */}
+            <path
+                d="M0,300 L0,220 L150,150 L300,250 L500,120 L700,200 L900,100 L1100,180 L1300,120 L1440,180 L1440,300 Z"
+                fill="#0f0f23"
+            />
+            {/* Snow caps */}
+            <path
+                d="M150,150 L180,170 L120,170 Z M500,120 L540,150 L460,150 Z M900,100 L950,140 L850,140 Z M1300,120 L1340,150 L1260,150 Z"
+                fill="white"
+                opacity="0.8"
+            />
+        </svg>
+    </div>
+);
+
+// Temperature/data reading widget
+const DataWidget = ({ label, value, unit }: { label: string; value: string; unit: string }) => (
+    <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 border border-green-400/20">
+        <p className="text-green-400/60 text-xs uppercase tracking-wider">{label}</p>
+        <div className="flex items-baseline gap-1">
+            <span className="text-2xl font-mono text-green-400">{value}</span>
+            <span className="text-sm text-green-400/60">{unit}</span>
+        </div>
+    </div>
+);
+
 export default function AuroraBorealisPage({ data }: { data?: PortfolioData }) {
     const displayData = data || mockData;
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let time = 0;
-        const colors = ['#00ff87', '#60efff', '#ff00ff', '#7b2ff7'];
-
-        const animate = () => {
-            time += 0.005;
-            ctx.fillStyle = 'rgba(0, 10, 20, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < 5; i++) {
-                ctx.beginPath();
-                ctx.moveTo(0, canvas.height * 0.3);
-
-                for (let x = 0; x <= canvas.width; x += 10) {
-                    const y = canvas.height * 0.3 +
-                        Math.sin(x * 0.01 + time + i) * 50 +
-                        Math.sin(x * 0.02 + time * 1.5 + i) * 30;
-                    ctx.lineTo(x, y);
-                }
-
-                ctx.lineTo(canvas.width, 0);
-                ctx.lineTo(0, 0);
-                ctx.closePath();
-
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-                gradient.addColorStop(0, colors[i % colors.length] + '40');
-                gradient.addColorStop(0.5, colors[(i + 1) % colors.length] + '60');
-                gradient.addColorStop(1, colors[(i + 2) % colors.length] + '40');
-                ctx.fillStyle = gradient;
-                ctx.fill();
-            }
-
-            requestAnimationFrame(animate);
-        };
-        animate();
-
-        const handleResize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
 
     return (
-        <div className="min-h-screen bg-[#000a14] text-white font-sans overflow-x-hidden">
-            <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none opacity-70" />
+        <div className="min-h-screen text-white font-sans overflow-hidden relative" style={{
+            background: 'linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 40%, #0f0f23 100%)'
+        }}>
+            {/* Stars */}
+            <StarField />
 
-            {/* Navigation */}
-            <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-xl font-bold">
-                        <Sparkles className="w-6 h-6 text-emerald-400" />
-                        <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                            {displayData.name}
-                        </span>
-                    </div>
-                    <div className="flex gap-8 text-sm font-medium text-white/60">
-                        {['About', 'Projects', 'Skills', 'Education', 'Contact'].map((item) => (
-                            <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-emerald-400 transition-colors">
-                                {item}
-                            </a>
-                        ))}
-                    </div>
+            {/* Aurora layers */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <AuroraWave color="#22d3ee" delay={0} blur={60} y="10%" />
+                <AuroraWave color="#a855f7" delay={2} blur={50} y="20%" />
+                <AuroraWave color="#10b981" delay={1} blur={70} y="5%" />
+                <AuroraWave color="#3b82f6" delay={3} blur={55} y="15%" />
+                <AuroraWave color="#f472b6" delay={1.5} blur={45} y="25%" />
+            </div>
+
+            {/* Snowfall */}
+            <Snowfall />
+
+            {/* Mountains */}
+            <Mountains />
+
+            {/* Navigation - Arctic station style */}
+            <nav className="fixed top-0 w-full z-50 px-6 py-4">
+                <div className="max-w-5xl mx-auto">
+                    <motion.div
+                        initial={{ y: -50 }}
+                        animate={{ y: 0 }}
+                        className="bg-black/40 backdrop-blur-xl rounded-xl px-8 py-4 border border-cyan-400/20"
+                    >
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <motion.div
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                >
+                                    <Snowflake className="w-8 h-8 text-cyan-400" />
+                                </motion.div>
+                                <span className="text-2xl font-bold tracking-wider text-cyan-300">AURORA</span>
+                            </div>
+                            <div className="flex gap-8 text-sm font-medium text-white/60">
+                                {['Base', 'Systems', 'Logs', 'Comms'].map((item) => (
+                                    <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-cyan-400 transition-colors">
+                                        {item}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </nav>
 
-            {/* Hero */}
-            <section className="min-h-screen flex items-center justify-center px-6 relative">
-                <div className="text-center relative z-10">
+            {/* Hero - Research station display */}
+            <section className="min-h-screen flex items-center justify-center px-6 pt-24 pb-32 relative z-20">
+                <div className="max-w-4xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm mb-8"
+                        className="text-center"
                     >
-                        <Sparkles className="w-4 h-4" />
-                        {displayData.role}
-                    </motion.div>
-                    <motion.h1
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-6xl md:text-8xl font-black mb-6 leading-tight"
-                    >
-                        <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                        {/* Station ID badge */}
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="inline-flex items-center gap-3 px-6 py-3 bg-black/40 backdrop-blur-sm rounded-xl border border-cyan-400/30 mb-8"
+                        >
+                            <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse" />
+                            <span className="text-cyan-300 font-mono tracking-wider">{displayData.role}</span>
+                        </motion.div>
+
+                        <h1
+                            className="text-6xl md:text-8xl font-black mb-6 text-transparent bg-clip-text"
+                            style={{
+                                backgroundImage: 'linear-gradient(135deg, #22d3ee, #a855f7, #10b981, #22d3ee)',
+                                backgroundSize: '300% 300%',
+                                animation: 'aurora-shift 8s ease infinite'
+                            }}
+                        >
                             {displayData.name}
-                        </span>
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-xl text-white/60 max-w-2xl mx-auto mb-12"
-                    >
-                        {displayData.bio}
-                    </motion.p>
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="flex justify-center gap-4"
-                    >
-                        <a href="#projects" className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full font-bold hover:shadow-[0_0_40px_rgba(16,185,129,0.4)] transition-all">
-                            View Projects
-                        </a>
-                        <a href="#contact" className="px-8 py-4 bg-white/5 border border-white/10 rounded-full font-bold hover:bg-white/10 transition-all">
-                            Contact Me
-                        </a>
+                        </h1>
+
+                        <style jsx>{`
+                            @keyframes aurora-shift {
+                                0%, 100% { background-position: 0% 50%; }
+                                50% { background-position: 100% 50%; }
+                            }
+                        `}</style>
+
+                        <p className="text-xl text-cyan-100/60 max-w-xl mx-auto mb-12">
+                            {displayData.bio}
+                        </p>
+
+                        {/* Data widgets row */}
+                        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
+                            <DataWidget label="Temp" value="-15" unit="°C" />
+                            <DataWidget label="Wind" value="12" unit="km/h" />
+                            <DataWidget label="Kp Index" value="7" unit="" />
+                        </div>
                     </motion.div>
                 </div>
             </section>
 
+            {/* About - Station log */}
+            <section id="base" className="py-32 px-6 relative z-20">
+                <div className="max-w-3xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="bg-black/40 backdrop-blur-xl rounded-xl p-12 border border-cyan-400/20"
+                    >
+                        <div className="flex items-center gap-4 mb-8">
+                            <Mountain className="w-10 h-10 text-cyan-400" />
+                            <div>
+                                <h2 className="text-3xl font-bold text-cyan-300">Station Log</h2>
+                                <p className="text-cyan-400/50 font-mono text-sm">ENTRY #2847</p>
+                            </div>
+                        </div>
+                        <p className="text-cyan-100/60 leading-relaxed text-lg font-mono">
+                            Like the aurora that dances across the Arctic sky, I find beauty in the patterns
+                            hidden within data. My work involves building pipelines that flow like ethereal
+                            lights—constantly moving, transforming, illuminating insights from the darkness.
+                            Currently stationed at {displayData.location}, where the data streams never stop. ❄️
+                        </p>
+
+                        {/* Status bar */}
+                        <div className="mt-8 flex items-center gap-4 text-sm font-mono">
+                            <span className="text-green-400">● ONLINE</span>
+                            <span className="text-cyan-400/50">|</span>
+                            <span className="text-cyan-400/70">Last sync: 2 min ago</span>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Skills - Terminal/monitoring style */}
+            <section id="systems" className="py-32 px-6 relative z-20">
+                <div className="max-w-4xl mx-auto">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-4 text-cyan-300"
+                    >
+                        System Status
+                    </motion.h2>
+                    <p className="text-center text-cyan-400/50 mb-16 font-mono">All systems operational</p>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {displayData.skills.map((skill, i) => (
+                            <motion.div
+                                key={skill}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                whileHover={{ scale: 1.05 }}
+                                className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-cyan-400/20 cursor-pointer group"
+                            >
+                                <div className="flex items-center gap-2 mb-2">
+                                    <div className="w-2 h-2 rounded-full bg-green-400 group-hover:animate-pulse" />
+                                    <span className="text-xs text-green-400 font-mono uppercase">Active</span>
+                                </div>
+                                <span className="font-bold text-cyan-200">{skill}</span>
+                                {/* Progress bar */}
+                                <div className="mt-3 h-1 bg-cyan-400/20 rounded-full overflow-hidden">
+                                    <motion.div
+                                        className="h-full bg-gradient-to-r from-cyan-400 to-purple-400"
+                                        initial={{ width: 0 }}
+                                        whileInView={{ width: `${70 + Math.random() * 30}%` }}
+                                        transition={{ duration: 1, delay: i * 0.1 }}
+                                    />
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Projects */}
-            <section id="projects" className="py-32 px-6 relative z-10">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="text-4xl font-bold mb-16 text-center">
-                        <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                            Featured Projects
-                        </span>
-                    </h2>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <section id="logs" className="py-32 px-6 relative z-20">
+                <div className="max-w-5xl mx-auto">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-16 text-cyan-300"
+                    >
+                        Mission Logs
+                    </motion.h2>
+                    <div className="grid md:grid-cols-2 gap-8">
                         {displayData.projects.map((project, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 }}
-                                className={`group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-emerald-500/30 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                whileHover={{ y: -10 }}
+                                className={`group bg-black/40 backdrop-blur-xl rounded-xl border border-cyan-400/20 overflow-hidden ${project.url || project.github ? 'cursor-pointer' : ''}`}
                                 onClick={() => {
                                     const url = project.url || project.github;
                                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
                                 }}
                             >
-                                <div className="aspect-video bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-xl mb-6 flex items-center justify-center">
-                                    <Sparkles className="w-12 h-12 text-emerald-400/50 group-hover:text-emerald-400 transition-colors" />
+                                {/* Aurora header */}
+                                <div
+                                    className="h-40 relative overflow-hidden"
+                                    style={{
+                                        background: `linear-gradient(180deg, ${i === 0 ? '#22d3ee20, #a855f720' : '#10b98120, #3b82f620'})`
+                                    }}
+                                >
+                                    <motion.div
+                                        className="absolute inset-0"
+                                        style={{
+                                            background: `linear-gradient(90deg, transparent, ${i === 0 ? '#22d3ee' : '#10b981'}, transparent)`,
+                                            filter: 'blur(30px)',
+                                            opacity: 0.3
+                                        }}
+                                        animate={{ x: ['-100%', '100%'] }}
+                                        transition={{ duration: 4, repeat: Infinity }}
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-5xl">{i === 0 ? '🌌' : '🧊'}</span>
+                                    </div>
                                 </div>
-                                <h3 className="text-xl font-bold mb-2 group-hover:text-emerald-400 transition-colors">
-                                    {project.name}
-                                </h3>
-                                <p className="text-white/60 mb-4">{project.description}</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {project.technologies?.map((tech, j) => (
-                                        <span key={j} className="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs">
-                                            {tech}
-                                        </span>
-                                    ))}
+
+                                <div className="p-8">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-xs font-mono text-cyan-400/60">PROJECT-{String(i + 1).padStart(3, '0')}</span>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-cyan-200 mb-3 group-hover:text-cyan-100 transition-colors">
+                                        {project.name}
+                                    </h3>
+                                    <p className="text-cyan-100/50 mb-4">{project.description}</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.technologies?.map((tech) => (
+                                            <span key={tech} className="px-3 py-1 text-sm text-cyan-400 bg-cyan-400/10 rounded border border-cyan-400/20">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}
@@ -190,59 +386,62 @@ export default function AuroraBorealisPage({ data }: { data?: PortfolioData }) {
                 </div>
             </section>
 
-            {/* Skills */}
-            <section id="skills" className="py-32 px-6 relative z-10">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="text-4xl font-bold mb-16 text-center">
-                        <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                            Skills & Technologies
-                        </span>
-                    </h2>
-                    <div className="flex flex-wrap justify-center gap-4">
-                        {displayData.skills.map((skill, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.05 }}
-                                whileHover={{ scale: 1.1, y: -5 }}
-                                className="px-6 py-3 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-white/10 rounded-full font-medium hover:border-emerald-500/30 transition-all cursor-default"
-                            >
-                                {skill}
-                            </motion.div>
-                        ))}
-                    </div>
+            {/* Experience */}
+            <section className="py-32 px-6 relative z-20">
+                <div className="max-w-4xl mx-auto">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-16 text-cyan-300"
+                    >
+                        Expedition History
+                    </motion.h2>
+                    {displayData.experience.map((exp, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-cyan-400/20"
+                        >
+                            <div className="flex justify-between items-start flex-wrap gap-2 mb-2">
+                                <h3 className="text-xl font-bold text-cyan-200">{exp.position}</h3>
+                                <span className="px-4 py-1 bg-cyan-400/20 text-cyan-400 rounded-full text-sm font-mono">
+                                    {exp.startDate} - {exp.endDate}
+                                </span>
+                            </div>
+                            <p className="text-purple-300 mb-2">{exp.company}</p>
+                            <p className="text-cyan-100/50">{exp.description}</p>
+                        </motion.div>
+                    ))}
                 </div>
             </section>
 
             {/* Education */}
-            <section id="education" className="py-32 px-6 relative z-10">
+            <section className="py-32 px-6 relative z-20">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-4xl font-bold mb-16 text-center">
-                        <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-                            Education
-                        </span>
-                    </h2>
-                    <div className="space-y-6">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-16 text-cyan-300"
+                    >
+                        Training
+                    </motion.h2>
+                    <div className="grid md:grid-cols-2 gap-6">
                         {displayData.education.map((edu, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-purple-500/30 transition-all"
+                                className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-cyan-400/20"
                             >
-                                <div className="flex justify-between items-start flex-wrap gap-4">
-                                    <div>
-                                        <h3 className="text-2xl font-bold mb-2">{edu.degree}</h3>
-                                        <p className="text-white/60">{edu.school}</p>
-                                        {edu.field && <p className="text-purple-400 text-sm mt-1">{edu.field}</p>}
-                                    </div>
-                                    <span className="px-4 py-2 bg-purple-500/10 text-purple-400 rounded-full text-sm">
-                                        {edu.startDate} - {edu.endDate}
-                                    </span>
-                                </div>
+                                <Thermometer className="w-8 h-8 text-cyan-400 mb-4" />
+                                <h3 className="text-lg font-bold text-cyan-200 mb-1">{edu.degree}</h3>
+                                <p className="text-purple-300">{edu.school}</p>
+                                <p className="text-sm text-cyan-400/50 font-mono">{edu.startDate} - {edu.endDate}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -250,40 +449,45 @@ export default function AuroraBorealisPage({ data }: { data?: PortfolioData }) {
             </section>
 
             {/* Contact */}
-            <section id="contact" className="py-32 px-6 relative z-10">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-5xl font-bold mb-8">
-                        <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                            Let's Connect
-                        </span>
-                    </h2>
-                    <p className="text-xl text-white/60 mb-12">
-                        Ready to create something magical together?
-                    </p>
-                    <div className="flex justify-center gap-6">
-                        {displayData.email && (
-                            <a href={`mailto:${displayData.email}`} className="p-4 bg-white/5 border border-white/10 rounded-full hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all">
-                                <Mail className="w-6 h-6" />
-                            </a>
-                        )}
-                        {displayData.links?.github && (
-                            <a href={displayData.links.github} className="p-4 bg-white/5 border border-white/10 rounded-full hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all">
-                                <Github className="w-6 h-6" />
-                            </a>
-                        )}
-                        {displayData.links?.linkedin && (
-                            <a href={displayData.links.linkedin} className="p-4 bg-white/5 border border-white/10 rounded-full hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all">
-                                <Linkedin className="w-6 h-6" />
-                            </a>
-                        )}
-                    </div>
+            <section id="comms" className="py-32 px-6 relative z-20">
+                <div className="max-w-2xl mx-auto text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="bg-black/40 backdrop-blur-xl rounded-xl p-12 border border-cyan-400/20"
+                    >
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                        >
+                            <Wind className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
+                        </motion.div>
+                        <h2 className="text-4xl font-bold mb-6 text-cyan-300">Open Comms Channel</h2>
+                        <p className="text-cyan-100/50 mb-8">
+                            Ready to explore the data frontier together?
+                        </p>
+                        <div className="flex justify-center gap-6">
+                            {[
+                                { icon: Mail, href: `mailto:${displayData.email}` },
+                                { icon: Github, href: displayData.links.github },
+                                { icon: Linkedin, href: displayData.links.linkedin }
+                            ].map(({ icon: Icon, href }, i) => (
+                                <motion.a
+                                    key={i}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    whileHover={{ scale: 1.1, y: -5 }}
+                                    className="p-4 bg-cyan-400/20 rounded-xl border border-cyan-400/30"
+                                >
+                                    <Icon className="w-6 h-6 text-cyan-400" />
+                                </motion.a>
+                            ))}
+                        </div>
+                    </motion.div>
                 </div>
             </section>
-
-            {/* Footer */}
-            <footer className="py-8 text-center text-white/40 text-sm relative z-10 border-t border-white/5">
-                <p>© 2024 {displayData.name}. Inspired by the Aurora Borealis.</p>
-            </footer>
         </div>
     );
 }

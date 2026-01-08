@@ -45,6 +45,27 @@ import GradientWavesPage from '@/components/templates/developer/gradient-waves/P
 import NeonGridPage from '@/components/templates/developer/neon-grid/Page';
 import RetroComicPage from '@/components/templates/developer/retro-comic/Page';
 import PixelArtPage from '@/components/templates/developer/pixel-art/Page';
+// New 20 Creative Templates
+import WatercolorSplashPage from '@/components/templates/developer/watercolor-splash/Page';
+import OrigamiPaperPage from '@/components/templates/developer/origami-paper/Page';
+import UnderwaterOceanPage from '@/components/templates/developer/underwater-ocean/Page';
+import SteampunkBrassPage from '@/components/templates/developer/steampunk-brass/Page';
+import NeonTokyoPage from '@/components/templates/developer/neon-tokyo/Page';
+import ArtDecoGoldPage from '@/components/templates/developer/art-deco-gold/Page';
+import PolaroidMemoriesPage from '@/components/templates/developer/polaroid-memories/Page';
+import ArcadeCabinetPage from '@/components/templates/developer/arcade-cabinet/Page';
+import CandyPopPage from '@/components/templates/developer/candy-pop/Page';
+import IndustrialSteelPage from '@/components/templates/developer/industrial-steel/Page';
+import BotanicalGardenPage from '@/components/templates/developer/botanical-garden/Page';
+import CosmicNebulaPage from '@/components/templates/developer/cosmic-nebula/Page';
+import VintageRadioPage from '@/components/templates/developer/vintage-radio/Page';
+import ChalkboardSchoolPage from '@/components/templates/developer/chalkboard-school/Page';
+import LavaLampPage from '@/components/templates/developer/lava-lamp/Page';
+import CircuitBoardPage from '@/components/templates/developer/circuit-board/Page';
+import StainedGlassPage from '@/components/templates/developer/stained-glass/Page';
+import CassetteTapePage from '@/components/templates/developer/cassette-tape/Page';
+import GraffitiStreetPage from '@/components/templates/developer/graffiti-street/Page';
+import RetroDinerPage from '@/components/templates/developer/retro-diner/Page';
 
 interface AuthUser {
     id: string;
@@ -94,6 +115,27 @@ const templateComponents: Record<string, React.ComponentType<any>> = {
     'neon-grid': NeonGridPage,
     'retro-comic': RetroComicPage,
     'pixel-art': PixelArtPage,
+    // New 20 Creative Templates
+    'watercolor-splash': WatercolorSplashPage,
+    'origami-paper': OrigamiPaperPage,
+    'underwater-ocean': UnderwaterOceanPage,
+    'steampunk-brass': SteampunkBrassPage,
+    'neon-tokyo': NeonTokyoPage,
+    'art-deco-gold': ArtDecoGoldPage,
+    'polaroid-memories': PolaroidMemoriesPage,
+    'arcade-cabinet': ArcadeCabinetPage,
+    'candy-pop': CandyPopPage,
+    'industrial-steel': IndustrialSteelPage,
+    'botanical-garden': BotanicalGardenPage,
+    'cosmic-nebula': CosmicNebulaPage,
+    'vintage-radio': VintageRadioPage,
+    'chalkboard-school': ChalkboardSchoolPage,
+    'lava-lamp': LavaLampPage,
+    'circuit-board': CircuitBoardPage,
+    'stained-glass': StainedGlassPage,
+    'cassette-tape': CassetteTapePage,
+    'graffiti-street': GraffitiStreetPage,
+    'retro-diner': RetroDinerPage,
 };
 
 export default function TemplatePreviewPage({ params, searchParams }: { params: { id: string }, searchParams?: { siteId?: string } }) {

@@ -1,287 +1,548 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Droplets, Waves, Zap, Activity } from 'lucide-react';
+import { Mail, Github, Linkedin, Droplets, Waves, Beaker, FlaskConical } from 'lucide-react';
 import { PortfolioData } from '../../types';
 
 const mockData: PortfolioData = {
     name: "Fluid Dev",
-    role: "Full Stack Developer",
-    email: "dev@fluid.io",
+    role: "Creative Engineer",
+    email: "dev@liquid.io",
     phone: "+1 555 000 0000",
     location: "Flow State",
-    bio: "Creating frictionless user experiences that adapt and evolve. Liquid interfaces for the modern web.",
-    skills: ["React", "Next.js", "TypeScript", "Node.js", "GraphQL", "Tailwind", "Framer Motion", "Three.js", "PostgreSQL", "Docker", "AWS", "Figma"],
-    experience: [{ company: "Flow Corp", position: "Lead Dev", startDate: "2020", endDate: "Present", description: "Flowing", highlights: [] }],
+    bio: "Creating interfaces that flow like water. Smooth, natural, unstoppable.",
+    skills: ["React", "Animation", "WebGL", "Three.js", "GSAP", "Framer Motion", "CSS", "Canvas"],
+    experience: [{ company: "Flow Labs", position: "Motion Engineer", startDate: "2020", endDate: "Present", description: "Building fluid experiences", highlights: [] }],
     education: [
-        { school: "Tech University", degree: "Master of Computer Science", field: "CS", startDate: "2022", endDate: "2024" },
-        { school: "State College", degree: "Bachelor of Engineering", field: "Engineering", startDate: "2018", endDate: "2022" }
+        { school: "Motion University", degree: "BA Interactive Design", field: "Design", startDate: "2016", endDate: "2020" }
     ],
     projects: [
-        { name: "Liquid Flow 1", description: "Adaptive interface with fluid animations", technologies: ["React", "Framer Motion"] },
-        { name: "Liquid Flow 2", description: "State management system", technologies: ["Next.js", "GraphQL"] },
-        { name: "Liquid Flow 3", description: "Responsive design framework", technologies: ["Tailwind", "TypeScript"] }
+        { name: "Ripple", description: "Fluid interaction library", technologies: ["WebGL", "GLSL"] },
+        { name: "Stream", description: "Real-time data flow viz", technologies: ["D3", "Canvas"] }
     ],
     links: { github: "https://github.com", linkedin: "https://linkedin.com" }
 };
 
+// Oil/lava lamp blob
+const LiquidBlob = ({ color, size, x, y, speed }: {
+    color: string; size: number; x: string; y: string; speed: number
+}) => (
+    <motion.div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+            width: size,
+            height: size,
+            left: x,
+            top: y,
+            background: color,
+            filter: 'blur(2px)'
+        }}
+        animate={{
+            y: [0, -100, 0],
+            scale: [1, 1.3, 0.8, 1.1, 1],
+            borderRadius: ['50%', '40% 60% 60% 40%', '60% 40% 40% 60%', '50%']
+        }}
+        transition={{
+            duration: speed,
+            repeat: Infinity,
+            ease: "easeInOut"
+        }}
+    />
+);
+
+// Bubble rising effect
+const Bubble = ({ delay, x }: { delay: number; x: string }) => (
+    <motion.div
+        className="absolute bottom-0 rounded-full pointer-events-none"
+        style={{
+            left: x,
+            width: 10 + Math.random() * 20,
+            height: 10 + Math.random() * 20,
+            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(255,255,255,0.1))',
+            border: '1px solid rgba(255,255,255,0.2)'
+        }}
+        animate={{
+            y: [0, '-100vh'],
+            x: [0, Math.sin(delay) * 30, 0],
+            scale: [0.5, 1, 0.8, 1]
+        }}
+        transition={{
+            duration: 6 + Math.random() * 4,
+            repeat: Infinity,
+            delay,
+            ease: "easeOut"
+        }}
+    />
+);
+
+// Metaball SVG filter
+const MetaballFilter = () => (
+    <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+            </filter>
+        </defs>
+    </svg>
+);
+
+// Liquid container
+const LiquidTank = ({ children, fillColor, level }: {
+    children: React.ReactNode; fillColor: string; level: string
+}) => (
+    <div className="relative rounded-3xl overflow-hidden border-4 border-white/10"
+        style={{ background: 'rgba(0,0,0,0.3)' }}>
+        {/* Liquid fill */}
+        <motion.div
+            className="absolute bottom-0 left-0 right-0"
+            style={{
+                height: level,
+                background: fillColor,
+            }}
+            animate={{
+                height: [level, `calc(${level} + 2%)`, level]
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+        >
+            {/* Wave surface */}
+            <svg className="absolute top-0 left-0 w-full h-8 -translate-y-1/2" viewBox="0 0 1200 50" preserveAspectRatio="none">
+                <motion.path
+                    d="M0,25 Q150,50 300,25 T600,25 T900,25 T1200,25 L1200,50 L0,50 Z"
+                    fill={fillColor}
+                    animate={{
+                        d: [
+                            "M0,25 Q150,50 300,25 T600,25 T900,25 T1200,25 L1200,50 L0,50 Z",
+                            "M0,25 Q150,0 300,25 T600,25 T900,25 T1200,25 L1200,50 L0,50 Z"
+                        ]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                />
+            </svg>
+        </motion.div>
+        <div className="relative z-10">{children}</div>
+    </div>
+);
+
+// Drip animation
+const Drip = ({ color, x, delay }: { color: string; x: string; delay: number }) => (
+    <motion.div
+        className="absolute top-0 pointer-events-none"
+        style={{ left: x }}
+        initial={{ y: 0, scaleY: 1 }}
+        animate={{
+            y: [0, 20, 100],
+            scaleY: [1, 1.5, 0.5],
+            opacity: [1, 1, 0]
+        }}
+        transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay,
+            repeatDelay: 3
+        }}
+    >
+        <div
+            className="w-3 h-8 rounded-full"
+            style={{ background: color }}
+        />
+    </motion.div>
+);
+
 export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
     const displayData = data || mockData;
+
     return (
-        <div className="min-h-screen bg-[#0F172A] text-white font-sans overflow-x-hidden selection:bg-blue-500 selection:text-white">
-            {/* Fluid Background */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-blue-600/20 rounded-full blur-[120px] animate-pulse" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-purple-600/20 rounded-full blur-[120px] animate-pulse delay-1000" />
-                <div className="absolute top-[40%] left-[40%] w-[40vw] h-[40vw] bg-cyan-500/10 rounded-full blur-[100px] animate-pulse delay-2000" />
+        <div className="min-h-screen text-white font-sans overflow-hidden relative" style={{
+            background: 'linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2a 100%)'
+        }}>
+            {/* Metaball filter */}
+            <MetaballFilter />
+
+            {/* Large liquid blobs in background */}
+            <div className="fixed inset-0 pointer-events-none" style={{ filter: 'url(#goo)' }}>
+                <LiquidBlob color="rgba(59, 130, 246, 0.4)" size={300} x="5%" y="10%" speed={12} />
+                <LiquidBlob color="rgba(168, 85, 247, 0.4)" size={250} x="70%" y="20%" speed={15} />
+                <LiquidBlob color="rgba(236, 72, 153, 0.4)" size={200} x="30%" y="60%" speed={10} />
+                <LiquidBlob color="rgba(34, 211, 238, 0.4)" size={280} x="80%" y="50%" speed={14} />
+            </div>
+
+            {/* Rising bubbles */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                {[...Array(15)].map((_, i) => (
+                    <Bubble key={i} delay={i * 0.5} x={`${Math.random() * 100}%`} />
+                ))}
+            </div>
+
+            {/* Dripping effect from top */}
+            <div className="fixed top-0 left-0 right-0 pointer-events-none">
+                <Drip color="rgba(59, 130, 246, 0.8)" x="15%" delay={0} />
+                <Drip color="rgba(168, 85, 247, 0.8)" x="45%" delay={1.5} />
+                <Drip color="rgba(236, 72, 153, 0.8)" x="75%" delay={3} />
             </div>
 
             {/* Navigation */}
-            <nav className="fixed top-0 w-full z-50 bg-[#0F172A]/50 backdrop-blur-xl border-b border-white/5">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                        <Droplets className="w-6 h-6 text-blue-400" />
-                        <span>FLUID.IO</span>
-                    </div>
-                    <div className="flex gap-8 text-sm font-medium text-slate-300">
-                        {['Work', 'Education', 'About', 'Skills', 'Contact'].map((item) => (
-                            <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-white transition-colors relative group">
-                                {item}
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 transition-all group-hover:w-full" />
-                            </a>
-                        ))}
-                    </div>
+            <nav className="fixed top-0 w-full z-50 px-6 py-4">
+                <div className="max-w-5xl mx-auto">
+                    <LiquidTank fillColor="rgba(59, 130, 246, 0.3)" level="100%">
+                        <div className="px-8 py-4">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-3">
+                                    <motion.div
+                                        animate={{ rotate: [0, 360] }}
+                                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        <Droplets className="w-8 h-8 text-blue-400" />
+                                    </motion.div>
+                                    <span className="text-2xl font-bold tracking-wider text-blue-300">LIQUID</span>
+                                </div>
+                                <div className="flex gap-8 text-sm font-medium text-white/60">
+                                    {['Flow', 'Mix', 'Pour', 'Fill'].map((item) => (
+                                        <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-blue-400 transition-colors">
+                                            {item}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </LiquidTank>
                 </div>
             </nav>
 
-            {/* Hero Section */}
-            <section className="min-h-screen flex items-center px-6 pt-20 relative">
-                <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-16 items-center">
-                    <div className="space-y-8 relative z-10">
+            {/* Hero - Beaker/flask style */}
+            <section className="min-h-screen flex items-center justify-center px-6 pt-24 pb-20 relative z-10">
+                <div className="max-w-4xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-center"
+                    >
+                        {/* Flask decoration */}
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm text-blue-300 text-sm font-medium"
+                            className="w-40 h-56 mx-auto mb-12 relative"
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{ duration: 4, repeat: Infinity }}
                         >
-                            <Waves className="w-4 h-4" />
-                            <span>Flow State Development</span>
+                            {/* Flask body */}
+                            <div className="absolute bottom-0 w-full h-40 rounded-b-full bg-white/5 border-2 border-white/20 overflow-hidden">
+                                {/* Liquid fill */}
+                                <motion.div
+                                    className="absolute bottom-0 left-0 right-0"
+                                    style={{
+                                        height: '60%',
+                                        background: 'linear-gradient(0deg, #3b82f6, #a855f7)'
+                                    }}
+                                    animate={{ height: ['55%', '65%', '55%'] }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                >
+                                    {/* Bubbles in liquid */}
+                                    {[...Array(5)].map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            className="absolute w-2 h-2 rounded-full bg-white/30"
+                                            style={{ left: `${20 + i * 15}%`, bottom: '10%' }}
+                                            animate={{ y: [0, -40], opacity: [1, 0] }}
+                                            transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }}
+                                        />
+                                    ))}
+                                </motion.div>
+                            </div>
+                            {/* Flask neck */}
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-20 bg-white/5 border-2 border-white/20 border-b-0 rounded-t-lg" />
                         </motion.div>
 
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="text-6xl lg:text-8xl font-bold leading-tight tracking-tight"
-                        >
-                            Seamless
-                            <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                                Digital Flow
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-xl text-slate-400 max-w-lg leading-relaxed"
-                        >
-                            Creating frictionless user experiences that adapt and evolve.
-                            Liquid interfaces for the modern web.
-                        </motion.p>
-
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="flex gap-4"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500/20 rounded-full border border-blue-400/30 mb-8"
                         >
-                            <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl font-bold hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] transition-all hover:scale-105">
-                                Explore Work
-                            </button>
+                            <Beaker className="w-5 h-5 text-blue-400" />
+                            <span className="text-blue-300">{displayData.role}</span>
                         </motion.div>
-                    </div>
 
-                    <div className="relative hidden lg:block h-[600px]">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-purple-500/30 rounded-full blur-3xl animate-pulse" />
-                        <motion.div
-                            animate={{
-                                y: [0, -20, 0],
-                                rotate: [0, 5, 0]
+                        <h1
+                            className="text-6xl md:text-8xl font-black mb-6 text-transparent bg-clip-text"
+                            style={{
+                                backgroundImage: 'linear-gradient(135deg, #3b82f6, #a855f7, #ec4899)',
+                                backgroundSize: '200% 200%',
+                                animation: 'liquid-flow 4s ease infinite'
                             }}
-                            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                            className="relative z-10 w-full h-full bg-white/5 backdrop-blur-2xl rounded-[3rem] border border-white/10 p-8 shadow-2xl"
                         >
-                            <div className="w-full h-full rounded-[2rem] overflow-hidden relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500 rounded-full mix-blend-overlay filter blur-xl opacity-50 animate-blob" />
-                                <div className="absolute top-1/3 left-1/3 w-64 h-64 bg-purple-500 rounded-full mix-blend-overlay filter blur-xl opacity-50 animate-blob animation-delay-2000" />
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+                            {displayData.name}
+                        </h1>
 
-            {/* About Section */}
-            <section id="about" className="py-32 px-6 relative">
-                <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-                    <div className="relative order-2 md:order-1">
-                        <div className="aspect-square rounded-[3rem] overflow-hidden relative bg-white/5 border border-white/10 backdrop-blur-sm">
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
-                            <img
-                                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&h=800&fit=crop"
-                                alt="Profile"
-                                className="w-full h-full object-cover opacity-80 mix-blend-overlay"
-                            />
-                        </div>
-                    </div>
-                    <div className="order-1 md:order-2">
-                        <h2 className="text-5xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                            Fluid Intelligence
-                        </h2>
-                        <p className="text-xl text-slate-400 leading-relaxed mb-8">
-                            I adapt to challenges like water. My approach to development is fluid, responsive, and constantly evolving.
-                            I don't just write code; I create living, breathing digital ecosystems.
+                        <style jsx>{`
+                            @keyframes liquid-flow {
+                                0%, 100% { background-position: 0% 50%; }
+                                50% { background-position: 100% 50%; }
+                            }
+                        `}</style>
+
+                        <p className="text-xl text-blue-100/60 max-w-xl mx-auto mb-12">
+                            {displayData.bio}
                         </p>
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                                <div className="text-3xl font-bold text-blue-400 mb-2">5+</div>
-                                <div className="text-sm text-slate-500 uppercase tracking-wider">Years Flowing</div>
-                            </div>
-                            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                                <div className="text-3xl font-bold text-purple-400 mb-2">100%</div>
-                                <div className="text-sm text-slate-500 uppercase tracking-wider">Fluidity</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* Skills Section */}
-            <section id="skills" className="py-32 px-6 relative">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-20">
-                        <h2 className="text-4xl font-bold mb-4">Tech Stream</h2>
-                        <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto" />
-                    </div>
-
-                    <div className="flex flex-wrap justify-center gap-4">
-                        {['React', 'Next.js', 'TypeScript', 'Node.js', 'GraphQL', 'Tailwind', 'Framer Motion', 'Three.js', 'PostgreSQL', 'Docker', 'AWS', 'Figma'].map((skill, i) => (
-                            <motion.div
-                                key={i}
-                                whileHover={{ scale: 1.1 }}
-                                className="px-8 py-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-blue-400/50 transition-all cursor-default"
+                        <div className="flex justify-center gap-4">
+                            <a
+                                href="#pour"
+                                className="px-8 py-4 rounded-full font-bold text-white"
+                                style={{ background: 'linear-gradient(90deg, #3b82f6, #a855f7)' }}
                             >
-                                <span className="font-medium text-blue-100">{skill}</span>
-                            </motion.div>
-                        ))}
+                                View Work
+                            </a>
+                            <a
+                                href="#fill"
+                                className="px-8 py-4 rounded-full font-bold border border-blue-400/30 hover:bg-blue-500/20 transition-all"
+                            >
+                                Contact
+                            </a>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* About */}
+            <section id="flow" className="py-32 px-6 relative z-10">
+                <div className="max-w-3xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <LiquidTank fillColor="rgba(168, 85, 247, 0.3)" level="40%">
+                            <div className="p-12">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <FlaskConical className="w-10 h-10 text-purple-400" />
+                                    <h2 className="text-3xl font-bold text-purple-300">The Flow State</h2>
+                                </div>
+                                <p className="text-purple-100/60 leading-relaxed text-lg">
+                                    Like water finding its path, I create interfaces that flow naturally and
+                                    effortlessly. My approach blends fluid animations with intuitive interactions,
+                                    creating experiences that feel alive and responsive. Every transition is
+                                    deliberate, every motion purposeful. Currently flowing from {displayData.location}.
+                                </p>
+                            </div>
+                        </LiquidTank>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Skills - Test tubes */}
+            <section id="mix" className="py-32 px-6 relative z-10">
+                <div className="max-w-4xl mx-auto">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-4 text-blue-300"
+                    >
+                        The Mix
+                    </motion.h2>
+                    <p className="text-center text-blue-400/50 mb-16">Ingredients in my formula</p>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {displayData.skills.map((skill, i) => {
+                            const colors = ['#3b82f6', '#a855f7', '#ec4899', '#22d3ee', '#14b8a6', '#f59e0b', '#ef4444', '#10b981'];
+                            return (
+                                <motion.div
+                                    key={skill}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    whileHover={{ y: -10 }}
+                                    className="text-center cursor-pointer"
+                                >
+                                    {/* Test tube */}
+                                    <div className="w-16 h-32 mx-auto mb-4 relative">
+                                        <div className="absolute inset-0 rounded-b-full bg-white/5 border-2 border-white/20 overflow-hidden">
+                                            <motion.div
+                                                className="absolute bottom-0 left-0 right-0 rounded-b-full"
+                                                style={{
+                                                    height: `${50 + Math.random() * 40}%`,
+                                                    background: colors[i % colors.length]
+                                                }}
+                                                animate={{
+                                                    height: [`${50 + Math.random() * 30}%`, `${60 + Math.random() * 30}%`]
+                                                }}
+                                                transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                                            />
+                                        </div>
+                                        {/* Cap */}
+                                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-10 h-4 bg-white/10 rounded-t-lg border-2 border-white/20 border-b-0" />
+                                    </div>
+                                    <span className="font-bold text-white/80">{skill}</span>
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
-            <section id="work" className="py-32 px-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex items-end justify-between mb-20">
-                        <div>
-                            <h2 className="text-4xl font-bold mb-4">Featured Projects</h2>
-                            <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
-                        </div>
-                    </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Projects */}
+            <section id="pour" className="py-32 px-6 relative z-10">
+                <div className="max-w-5xl mx-auto">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-16 text-purple-300"
+                    >
+                        Poured Work
+                    </motion.h2>
+                    <div className="grid md:grid-cols-2 gap-8">
                         {displayData.projects.map((project, i) => (
                             <motion.div
                                 key={i}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
                                 whileHover={{ y: -10 }}
-                                className={`group relative bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                className={project.url || project.github ? 'cursor-pointer' : ''}
                                 onClick={() => {
                                     const url = project.url || project.github;
                                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
                                 }}
                             >
-                                <div className="aspect-video bg-black/20 relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 group-hover:opacity-100 transition-opacity" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <Activity className="w-12 h-12 text-white/50 group-hover:text-white transition-colors" />
+                                <LiquidTank
+                                    fillColor={i === 0 ? 'rgba(59, 130, 246, 0.4)' : 'rgba(236, 72, 153, 0.4)'}
+                                    level="30%"
+                                >
+                                    <div className="p-8 group">
+                                        <Waves className="w-12 h-12 text-white/30 mb-6 group-hover:text-white/50 transition-colors" />
+                                        <h3
+                                            className="text-2xl font-bold mb-3 text-transparent bg-clip-text"
+                                            style={{ backgroundImage: i === 0 ? 'linear-gradient(90deg, #3b82f6, #a855f7)' : 'linear-gradient(90deg, #ec4899, #f59e0b)' }}
+                                        >
+                                            {project.name}
+                                        </h3>
+                                        <p className="text-blue-100/50 mb-4">{project.description}</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {project.technologies?.map((tech) => (
+                                                <span key={tech} className="px-3 py-1 text-sm text-blue-300 bg-blue-500/20 rounded-full border border-blue-400/20">
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="p-6">
-                                    <h3 className="text-2xl font-bold mb-2 group-hover:text-blue-400 transition-colors">
-                                        {project.name}
-                                    </h3>
-                                    <p className="text-slate-400 mb-6">
-                                        {project.description}
-                                    </p>
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {project.technologies?.map((tech, j) => (
-                                            <span key={j} className="text-xs text-blue-300 bg-blue-500/10 px-2 py-1 rounded-full">
-                                                {tech}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <div className="flex items-center gap-2 text-sm font-bold text-blue-400">
-                                        <span>View Case Study</span>
-                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                                    </div>
-                                </div>
+                                </LiquidTank>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Education Section */}
-            <section id="education" className="py-32 px-6 relative">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900/20" />
-                <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="flex items-end justify-between mb-20">
-                        <div>
-                            <h2 className="text-4xl font-bold mb-4">Education</h2>
-                            <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
-                        </div>
-                    </div>
+            {/* Experience */}
+            <section className="py-32 px-6 relative z-10">
+                <div className="max-w-4xl mx-auto">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-16 text-blue-300"
+                    >
+                        Flow History
+                    </motion.h2>
+                    {displayData.experience.map((exp, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                        >
+                            <LiquidTank fillColor="rgba(34, 211, 238, 0.2)" level="25%">
+                                <div className="p-6">
+                                    <div className="flex justify-between items-start flex-wrap gap-2 mb-2">
+                                        <h3 className="text-xl font-bold text-cyan-300">{exp.position}</h3>
+                                        <span className="px-4 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm">
+                                            {exp.startDate} - {exp.endDate}
+                                        </span>
+                                    </div>
+                                    <p className="text-purple-300 mb-2">{exp.company}</p>
+                                    <p className="text-cyan-100/50">{exp.description}</p>
+                                </div>
+                            </LiquidTank>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
 
-                    <div className="space-y-6">
-                        {[
-                            { degree: 'Master of Computer Science', school: 'Tech University', year: '2022-2024' },
-                            { degree: 'Bachelor of Engineering', school: 'State College', year: '2018-2022' }
-                        ].map((edu, i) => (
+            {/* Education */}
+            <section className="py-32 px-6 relative z-10">
+                <div className="max-w-4xl mx-auto">
+                    <motion.h2
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-4xl font-bold text-center mb-16 text-purple-300"
+                    >
+                        Source
+                    </motion.h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {displayData.education.map((edu, i) => (
                             <motion.div
                                 key={i}
-                                whileHover={{ scale: 1.01 }}
-                                className="bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-md flex flex-col md:flex-row justify-between items-center gap-6 group hover:bg-white/10 transition-colors"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
                             >
-                                <div className="flex items-center gap-6">
-                                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                        <Zap className="w-8 h-8 text-white" />
+                                <LiquidTank fillColor="rgba(168, 85, 247, 0.2)" level="35%">
+                                    <div className="p-6">
+                                        <Droplets className="w-8 h-8 text-purple-400 mb-4" />
+                                        <h3 className="text-lg font-bold text-purple-300 mb-1">{edu.degree}</h3>
+                                        <p className="text-blue-300">{edu.school}</p>
+                                        <p className="text-sm text-purple-400/50">{edu.startDate} - {edu.endDate}</p>
                                     </div>
-                                    <div>
-                                        <h3 className="text-2xl font-bold mb-1">{edu.degree}</h3>
-                                        <p className="text-slate-400 text-lg">{edu.school}</p>
-                                    </div>
-                                </div>
-                                <div className="px-6 py-2 rounded-full bg-white/10 border border-white/10 font-mono text-blue-300">
-                                    {edu.year}
-                                </div>
+                                </LiquidTank>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Contact Section */}
-            <section id="contact" className="py-32 px-6">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-5xl md:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                        Start the Flow
-                    </h2>
-                    <p className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto">
-                        Ready to create something fluid? Let's build the future of the web together.
-                    </p>
-                    <button className="px-10 py-5 bg-white text-slate-900 rounded-full font-bold hover:scale-105 transition-transform shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                        Get in Touch
-                    </button>
+            {/* Contact */}
+            <section id="fill" className="py-32 px-6 relative z-10">
+                <div className="max-w-2xl mx-auto text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <LiquidTank fillColor="rgba(59, 130, 246, 0.3)" level="50%">
+                            <div className="p-12">
+                                <motion.div
+                                    animate={{ y: [0, -10, 0] }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                >
+                                    <Droplets className="w-16 h-16 text-blue-400 mx-auto mb-8" />
+                                </motion.div>
+                                <h2 className="text-4xl font-bold mb-6 text-blue-300">Fill My Inbox</h2>
+                                <p className="text-blue-100/50 mb-8">
+                                    Ready to create something fluid together?
+                                </p>
+                                <div className="flex justify-center gap-6">
+                                    {[
+                                        { icon: Mail, href: `mailto:${displayData.email}` },
+                                        { icon: Github, href: displayData.links.github },
+                                        { icon: Linkedin, href: displayData.links.linkedin }
+                                    ].map(({ icon: Icon, href }, i) => (
+                                        <motion.a
+                                            key={i}
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            whileHover={{ scale: 1.1, y: -5 }}
+                                            className="p-4 bg-blue-500/20 rounded-xl border border-blue-400/30"
+                                        >
+                                            <Icon className="w-6 h-6 text-blue-400" />
+                                        </motion.a>
+                                    ))}
+                                </div>
+                            </div>
+                        </LiquidTank>
+                    </motion.div>
                 </div>
             </section>
-        </div >
+        </div>
     );
 }
