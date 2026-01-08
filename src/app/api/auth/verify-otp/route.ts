@@ -1,8 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyEmailOTP, generateToken, setAuthCookie, getUserByEmail } from '@/lib/auth';
+import { rateLimit, getClientIP, RATE_LIMITS } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limiting - 10 attempts per 15 minutes per IP
+        const ip = getClientIP(request);
+        const { success: rateLimitOk, resetTime } = rateLimit(
+            `verify-otp:${ip}`,
+            RATE_LIMITS.OTP_VERIFY.limit,
+            RATE_LIMITS.OTP_VERIFY.windowMs
+        );
+
+        if (!rateLimitOk) {
+            const retryAfter = Math.ceil((resetTime - Date.now()) / 1000);
+            return NextResponse.json(
+                { error: 'Too many verification attempts. Please try again later.' },
+                {
+                    status: 429,
+                    headers: { 'Retry-After': String(retryAfter) }
+                }
+            );
+        }
+
         const { email, otp } = await request.json();
 
         if (!email || !otp) {

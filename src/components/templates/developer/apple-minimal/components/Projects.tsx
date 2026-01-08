@@ -19,16 +19,17 @@ export default function Projects({ data }: { data: PortfolioData }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {data.projects.map((project, index) => (
-                        <motion.a
+                        <motion.div
                             key={index}
-                            href={project.url || project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            onClick={() => {
+                                const url = project.url || project.github;
+                                if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                            }}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="group block"
+                            className={`group block ${project.url || project.github ? 'cursor-pointer' : ''}`}
                         >
                             <div className="bg-gray-100 aspect-[4/3] rounded-2xl mb-6 overflow-hidden relative">
                                 {/* Placeholder for project image */}
@@ -56,7 +57,7 @@ export default function Projects({ data }: { data: PortfolioData }) {
                                     </div>
                                 </div>
                             </div>
-                        </motion.a>
+                        </motion.div>
                     ))}
                 </div>
             </div>

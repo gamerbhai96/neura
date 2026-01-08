@@ -134,12 +134,18 @@ export default function GlassCardsPage({ data }: { data?: PortfolioData }) {
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
                                 whileHover={{ y: -10, scale: 1.02 }}
-                                className="group bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6 transition-all hover:bg-white/15 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                                className={`group bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6 transition-all hover:bg-white/15 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-gradient-to-br from-white/5 to-white/10 rounded-xl mb-6 flex items-center justify-center border border-white/10">
                                     <Sparkles className="w-12 h-12 text-white/30 group-hover:text-cyan-400 transition-colors" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-2">{project.name}</h3>
+                                <h3 className="text-xl font-bold mb-2">
+                                    {project.name}
+                                </h3>
                                 <p className="text-white/60 mb-4">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies?.map((tech, j) => (

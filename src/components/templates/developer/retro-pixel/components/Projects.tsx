@@ -18,7 +18,11 @@ export default function Projects({ data }: { data: PortfolioData }) {
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="bg-[#2c2137] border-4 border-[#e0f8cf] p-2 shadow-[8px_8px_0_rgba(224,248,207,1)]"
+                            className={`bg-[#2c2137] border-4 border-[#e0f8cf] p-2 shadow-[8px_8px_0_rgba(224,248,207,1)] ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                            onClick={() => {
+                                const url = project.url || project.github;
+                                if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                            }}
                         >
                             <div className="bg-[#071821] p-6 h-full flex flex-col">
                                 <h3 className="text-2xl font-bold text-[#86c06c] mb-4 uppercase tracking-wider border-b-2 border-[#306850] pb-2">
@@ -42,24 +46,14 @@ export default function Projects({ data }: { data: PortfolioData }) {
 
                                 <div className="flex gap-4 mt-auto">
                                     {project.url && (
-                                        <a
-                                            href={project.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex-1 text-center py-2 bg-[#86c06c] text-[#071821] font-bold uppercase hover:bg-[#e0f8cf] transition-colors"
-                                        >
+                                        <span className="flex-1 text-center py-2 bg-[#86c06c] text-[#071821] font-bold uppercase hover:bg-[#e0f8cf] transition-colors">
                                             Play
-                                        </a>
+                                        </span>
                                     )}
                                     {project.github && (
-                                        <a
-                                            href={project.github}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex-1 text-center py-2 border-2 border-[#86c06c] text-[#86c06c] font-bold uppercase hover:bg-[#86c06c] hover:text-[#071821] transition-colors"
-                                        >
+                                        <span className="flex-1 text-center py-2 border-2 border-[#86c06c] text-[#86c06c] font-bold uppercase hover:bg-[#86c06c] hover:text-[#071821] transition-colors">
                                             Source
-                                        </a>
+                                        </span>
                                     )}
                                 </div>
                             </div>

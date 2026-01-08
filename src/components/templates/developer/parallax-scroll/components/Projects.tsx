@@ -31,7 +31,11 @@ export default function Projects({ data }: { data: PortfolioData }) {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.8, delay: index * 0.2 }}
-                            className={`group ${index % 2 === 1 ? 'md:mt-32' : ''}`}
+                            className={`group ${index % 2 === 1 ? 'md:mt-32' : ''} ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                            onClick={() => {
+                                const url = project.url || project.github;
+                                if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                            }}
                         >
                             <div className="bg-slate-800/50 border border-white/10 p-8 md:p-12 hover:bg-slate-800 transition-colors duration-500 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-1 h-0 bg-purple-500 group-hover:h-full transition-all duration-500 ease-in-out"></div>
@@ -54,14 +58,14 @@ export default function Projects({ data }: { data: PortfolioData }) {
 
                                 <div className="flex gap-6 group-hover:translate-x-4 transition-transform duration-300 delay-150">
                                     {project.url && (
-                                        <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-white font-bold text-sm uppercase tracking-wider hover:text-purple-400 transition-colors">
+                                        <span className="text-white font-bold text-sm uppercase tracking-wider hover:text-purple-400 transition-colors">
                                             View Project
-                                        </a>
+                                        </span>
                                     )}
                                     {project.github && (
-                                        <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-white font-bold text-sm uppercase tracking-wider hover:text-purple-400 transition-colors">
+                                        <span className="text-white font-bold text-sm uppercase tracking-wider hover:text-purple-400 transition-colors">
                                             GitHub
-                                        </a>
+                                        </span>
                                     )}
                                 </div>
                             </div>

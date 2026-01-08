@@ -156,11 +156,15 @@ export default function GlitchCyberPage({ data }: { data?: PortfolioData }) {
                     </h2>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[1, 2, 3].map((item) => (
+                        {displayData.projects.map((project, i) => (
                             <motion.div
-                                key={item}
+                                key={i}
                                 whileHover={{ y: -10 }}
-                                className="group relative bg-gray-900 border border-cyan-500/30 overflow-hidden"
+                                className={`group relative bg-gray-900 border border-cyan-500/30 overflow-hidden ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-black relative overflow-hidden">
                                     <div className="absolute inset-0 bg-cyan-500/20 mix-blend-overlay group-hover:bg-pink-500/20 transition-colors" />
@@ -170,14 +174,21 @@ export default function GlitchCyberPage({ data }: { data?: PortfolioData }) {
                                 </div>
                                 <div className="p-6 relative">
                                     <div className="absolute top-0 right-0 p-2 bg-cyan-500 text-black text-xs font-bold uppercase">
-                                        v2.0.{item}
+                                        v2.0.{i + 1}
                                     </div>
                                     <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-cyan-400 transition-colors">
-                                        CYBER_PROJECT_{item}
+                                        {project.name}
                                     </h3>
                                     <p className="text-gray-400 text-sm mb-4">
-                                        High-performance web application with real-time data processing.
+                                        {project.description}
                                     </p>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {project.technologies?.map((tech, j) => (
+                                            <span key={j} className="text-xs text-cyan-500/70 border border-cyan-500/30 px-2 py-1">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
                                     <div className="flex items-center gap-2 text-cyan-500 font-bold text-sm uppercase">
                                         <span>Access Data</span>
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />

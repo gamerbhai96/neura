@@ -121,7 +121,11 @@ export default function BrutalistWebPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="border-2 border-black p-6 hover:bg-yellow-100 transition-colors"
+                                className={`border-2 border-black p-6 hover:bg-yellow-100 transition-colors ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="flex justify-between items-start flex-wrap gap-4">
                                     <div>

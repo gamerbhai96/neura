@@ -81,7 +81,7 @@ function FloatingShapes() {
     );
 }
 
-function Content() {
+function Content({ data }: { data: PortfolioData }) {
     return (
         <Scroll html style={{ width: '100%', color: 'white' }}>
             {/* Hero Section */}
@@ -101,10 +101,24 @@ function Content() {
                 <div className="w-1/2">
                     <h2 className="text-6xl font-bold mb-8 text-purple-400">SELECTED WORKS</h2>
                     <div className="space-y-8 pointer-events-auto">
-                        {[1, 2, 3].map((item) => (
-                            <div key={item} className="bg-black/50 backdrop-blur-md border border-purple-500/30 p-6 rounded-xl hover:border-purple-400 transition-colors cursor-pointer">
-                                <h3 className="text-2xl font-bold mb-2">Project Protocol {item}</h3>
-                                <p className="text-gray-400">Next.js • WebGL • Solidity</p>
+                        {data.projects.map((project, i) => (
+                            <div
+                                key={i}
+                                className={`bg-black/50 backdrop-blur-md border border-purple-500/30 p-6 rounded-xl hover:border-purple-400 transition-colors ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
+                            >
+                                <h3 className="text-2xl font-bold mb-2">{project.name}</h3>
+                                <p className="text-gray-400 mb-4">{project.description}</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {project.technologies?.map((tech) => (
+                                        <span key={tech} className="text-xs text-purple-300 border border-purple-500/30 px-2 py-1 rounded">
+                                            {tech}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -171,7 +185,7 @@ export default function WebGLTunnelPage({ data }: { data?: PortfolioData }) {
                     <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
                     <Tunnel />
                     <FloatingShapes />
-                    <Content />
+                    <Content data={displayData} />
                 </ScrollControls>
             </Canvas>
 

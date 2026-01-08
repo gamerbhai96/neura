@@ -119,7 +119,11 @@ export default function VaporwavePage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group bg-[#1a0033]/80 border-2 border-[#ff71ce]/30 p-8 relative overflow-hidden hover:border-[#01cdfe] transition-all"
+                                className={`group bg-[#1a0033]/80 border-2 border-[#ff71ce]/30 p-8 relative overflow-hidden hover:border-[#01cdfe] transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 {/* Scanlines */}
                                 <div className="absolute inset-0 pointer-events-none opacity-10 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(255,255,255,0.1)_2px,rgba(255,255,255,0.1)_4px)]" />

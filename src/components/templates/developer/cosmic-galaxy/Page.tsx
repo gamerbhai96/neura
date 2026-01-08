@@ -145,12 +145,18 @@ export default function CosmicGalaxyPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 hover:border-purple-500/30 transition-all"
+                                className={`group bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 hover:border-purple-500/30 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-2xl mb-6 flex items-center justify-center">
                                     <Moon className="w-16 h-16 text-purple-400/50 group-hover:text-purple-400 transition-colors" />
                                 </div>
-                                <h3 className="text-2xl font-bold mb-2 group-hover:text-purple-400 transition-colors">{project.name}</h3>
+                                <h3 className="text-2xl font-bold mb-2 group-hover:text-purple-400 transition-colors">
+                                    {project.name}
+                                </h3>
                                 <p className="text-white/60 mb-4">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies?.map((tech, j) => (

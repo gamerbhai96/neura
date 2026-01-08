@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pdf from 'pdf-parse/lib/pdf-parse';
 import { extractTextWithOcrSpace } from '@/lib/ocr-space/client';
+import fs from 'fs';
+import path from 'path';
+import { rateLimit, getClientIP, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Common programming languages and technologies for skill detection
 const TECH_KEYWORDS = new Set([
@@ -43,9 +46,9 @@ function fallbackParseResume(text: string) {
         // OCR text likely missing line breaks - add them before common section headers
         normalizedText = normalizedText
             // Add line breaks before section headers
-            .replace(/\s+(Experience|Education|Projects?|Skills?|Summary|Objective|Work History|Employment|Qualifications?|Certifications?|Technical Skills?|Core Competencies|Professional Experience|Academic)/gi, '\n$1')
+            .replace(/\s+(Experience|Education|Projects?|Skills?|Summary|Objective|Work History|Employment|Qualifications?|Certifications?|Technical Skills?|Core Competencies|Professional Experience|Academic|Achievements?|Awards?)/gi, '\n$1')
             // Add line breaks before bullet points
-            .replace(/\s+([•\-\*])\s+/g, '\n$1 ')
+            .replace(/\s+([•\-\*\u2022\u2023\u25E6\u2043\u2219])\s+/g, '\n$1 ')
             // Add line breaks before dates that look like job/education entries
             .replace(/\s+((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{4})/gi, '\n$1')
             .replace(/\s+(\d{4}\s*[-–—]\s*(?:\d{4}|Present|Current))/gi, '\n$1')
@@ -177,7 +180,7 @@ function fallbackParseResume(text: string) {
     // ============= SECTION DETECTION =============
 
     const sectionKeywords = {
-        skills: /^(?:skills?|technical\s*skills?|core\s*competenc|technologies|tech\s*stack|proficienc|expertise)/i,
+        skills: /^(?:skills?|technical\s*skills?|core\s*competenc|technical\s*proficienc|expertise|programming\s*languages)/i,
         experience: /^(?:experience|work\s*experience|professional\s*experience|employment|work\s*history|career)/i,
         education: /^(?:education|academic|qualification|degree|university|college|school)/i,
         projects: /^(?:projects?|personal\s*projects?|side\s*projects?|portfolio\s*projects?)/i,
@@ -268,83 +271,91 @@ function fallbackParseResume(text: string) {
     const expSection = sections.find(s => s.type === 'experience');
 
     if (expSection && expSection.lines.length > 0) {
-        const expText = expSection.lines.join('\n');
-
-        // Find date patterns to split entries
-        const datePattern = /(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\s,]+)?\d{4}\s*[-–—to]+\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\s,]+)?\d{0,4}|present|current/gi;
-
-        // Try to identify experience blocks
         const expLines = expSection.lines;
         let currentExp: any = null;
+        let lookingForPosition = false;
+
+        console.log('💼 Experience section lines:', expLines.length);
+        expLines.forEach((line, i) => console.log(`  ${i}: "${line.substring(0, 60)}..."`));
 
         for (let i = 0; i < expLines.length; i++) {
             const line = expLines[i];
-            const hasDate = datePattern.test(line);
-            datePattern.lastIndex = 0; // Reset regex
+            const isMainBullet = /^[•\u2022\u2023\u25E6\u2043\u2219]/.test(line);
+            const cleanLine = line.replace(/^[•\-\*\u2022\u2023\u25E6\u2043\u2219]\s*/, '').trim();
 
-            // Check if line looks like a new job entry (has date or is a short header-like line)
-            const isNewEntry = hasDate || (line.length < 80 && /^[A-Z]/.test(line) && !line.startsWith('•') && !line.startsWith('-'));
+            if (cleanLine.length < 3) continue;
 
-            if (isNewEntry && (hasDate || i === 0 || (currentExp && currentExp.highlights.length > 0))) {
+            // Extract dates from line
+            const dateMatch = cleanLine.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*\d{4})\s*[-–—to]+\s*((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*\d{4}|present|current)/i) ||
+                cleanLine.match(/(\b(?:19|20)\d{2}\b)\s*[-–—to]+\s*(\b(?:19|20)\d{2}\b|present|current)/i);
+
+            // Is this a new experience entry?
+            // Non-bullet line that is short and looks like a company/position header
+            const looksLikeHeader = !isMainBullet && cleanLine.length < 80 && /^[A-Z]/.test(cleanLine);
+
+            if (looksLikeHeader && (!currentExp || currentExp.highlights.length > 0 || lookingForPosition)) {
+                // Check if this is just a position line for the current company
+                if (lookingForPosition && currentExp && !currentExp.position) {
+                    // This line is the position
+                    currentExp.position = cleanLine.replace(/[-–—].*$/, '').trim();
+                    if (dateMatch) {
+                        currentExp.startDate = dateMatch[1];
+                        currentExp.endDate = dateMatch[2];
+                    }
+                    lookingForPosition = false;
+                    continue;
+                }
+
                 // Save previous entry
                 if (currentExp && (currentExp.company || currentExp.position)) {
                     experience.push(currentExp);
                 }
 
-                // Extract dates from line
-                const dates = line.match(/(\d{4})\s*[-–—to]+\s*(\d{4}|present|current)/i) ||
-                    line.match(/((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*\d{4})\s*[-–—to]+\s*((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*\d{4}|present|current)/i);
-
-                // Clean line of dates for title extraction
-                let titleLine = line.replace(/(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\s,]*\d{4}\s*[-–—to]+\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\s,]*)?\d{0,4}|present|current/gi, '').trim();
-                titleLine = titleLine.replace(/\s*[-–—|,]\s*$/, '').trim();
-
-                // Try to split company and position
-                let company = '';
-                let position = '';
-
-                // Check if there's a clear separator
-                const separators = [' at ', ' @ ', ' - ', ' | ', ' – ', ', '];
-                for (const sep of separators) {
-                    if (titleLine.includes(sep)) {
-                        const parts = titleLine.split(sep);
-                        if (parts.length >= 2) {
-                            position = parts[0].trim();
-                            company = parts.slice(1).join(sep).trim();
-                            break;
-                        }
-                    }
-                }
-
-                if (!company && !position) {
-                    // Use next line if current is just a title
-                    if (i + 1 < expLines.length && !expLines[i + 1].startsWith('•') && !expLines[i + 1].startsWith('-')) {
-                        position = titleLine;
-                        company = expLines[i + 1].replace(/\d{4}.*$/g, '').trim();
-                        i++; // Skip next line
-                    } else {
-                        position = titleLine;
-                    }
-                }
+                // This is a company line - look for "Company - Description" pattern
+                const companyMatch = cleanLine.match(/^([^-–—]+)\s*[-–—]\s*(.+)/);
+                const company = companyMatch ? companyMatch[1].trim() : cleanLine;
+                const companyDesc = companyMatch ? companyMatch[2].trim() : '';
 
                 currentExp = {
-                    company: company || '',
-                    position: position || '',
-                    startDate: dates ? dates[1] : '',
-                    endDate: dates ? dates[2] : '',
-                    description: '',
+                    company: company,
+                    position: '',
+                    startDate: dateMatch ? dateMatch[1] : '',
+                    endDate: dateMatch ? dateMatch[2] : '',
+                    description: companyDesc,
                     highlights: []
                 };
-            } else if (currentExp) {
-                // This is a description/bullet point
-                const cleanLine = line.replace(/^[•\-\*\u2022\u2023\u25E6\u2043\u2219]\s*/, '').trim();
-                if (cleanLine.length > 10) {
-                    if (!currentExp.description) {
-                        currentExp.description = cleanLine;
+
+                lookingForPosition = true;
+            } else if (isMainBullet && currentExp) {
+                // This is a bullet point - could be position or highlight
+                if (!currentExp.position && /intern|developer|engineer|manager|analyst|designer|lead|associate|consultant|specialist/i.test(cleanLine)) {
+                    // This looks like a position
+                    currentExp.position = cleanLine.replace(/:.*$/, '').trim();
+                } else {
+                    // This is a highlight
+                    // Extract the main content (handle "Project Name: Description" format)
+                    const highlightMatch = cleanLine.match(/^([^:]+):\s*(.+)/);
+                    if (highlightMatch) {
+                        currentExp.highlights.push(cleanLine);
                     } else {
                         currentExp.highlights.push(cleanLine);
                     }
                 }
+
+                // Check for dates in this line
+                if (dateMatch && !currentExp.startDate) {
+                    currentExp.startDate = dateMatch[1];
+                    currentExp.endDate = dateMatch[2];
+                }
+
+                lookingForPosition = false;
+            } else if (currentExp) {
+                // Non-bullet, non-header line - could be date or location
+                if (dateMatch && !currentExp.startDate) {
+                    currentExp.startDate = dateMatch[1];
+                    currentExp.endDate = dateMatch[2];
+                }
+                // Skip "Remote" or location lines
             }
         }
 
@@ -352,6 +363,9 @@ function fallbackParseResume(text: string) {
         if (currentExp && (currentExp.company || currentExp.position)) {
             experience.push(currentExp);
         }
+
+        console.log('💼 Experience extracted:', experience.length, 'entries');
+        experience.forEach((e, i) => console.log(`  ${i + 1}. ${e.company} - ${e.position}`));
     }
 
     // ============= EDUCATION EXTRACTION =============
@@ -376,6 +390,14 @@ function fallbackParseResume(text: string) {
 
             if (cleanLine.length < 3) continue;
 
+            // SKIP lines that are clearly NOT education data
+            if (/^(email|mobile|phone|contact|tel):/i.test(cleanLine) ||
+                cleanLine.includes('@') ||
+                /^https?:\/\//.test(cleanLine) ||
+                /^\+?\d{10,}/.test(cleanLine.replace(/[\s\-()]/g, ''))) {
+                continue;
+            }
+
             // Is this a new entry? 
             // ONLY main bullets (•) start new entries, NOT dashes (-) which are sub-bullets
             const isMainBullet = /^[•\u2022\u2023\u25E6\u2043\u2219]/.test(line);
@@ -390,7 +412,8 @@ function fallbackParseResume(text: string) {
                 }
 
                 // Extract all info from this line
-                const years = cleanLine.match(/\d{4}/g);
+                // STRICTER YEAR REGEX: Only match 19xx or 20xx to avoid phone numbers
+                const years = cleanLine.match(/\b(?:19|20)\d{2}\b/g);
 
                 // Try to identify degree keywords
                 const degreeKeywords = /\b(diploma|bachelor'?s?|master'?s?|ph\.?d\.?|doctorate?|associate'?s?|b\.?tech|m\.?tech|b\.?e|m\.?e|b\.?sc|m\.?sc|b\.?a|m\.?a|b\.?com|m\.?com|bca|mca|bba|mba|puc|hsc|sslc|12th|10th|high\s+school|higher\s+secondary)\b/i;
@@ -431,7 +454,10 @@ function fallbackParseResume(text: string) {
 
             } else if (currentEdu) {
                 // This is a continuation line - add missing info
-                const years = cleanLine.match(/\d{4}/g);
+                // Skip email/phone lines
+                if (/^(email|mobile|phone|contact):/i.test(cleanLine) || cleanLine.includes('@')) continue;
+
+                const years = cleanLine.match(/\b(?:19|20)\d{2}\b/g);
                 if (years && !currentEdu.endDate) {
                     currentEdu.endDate = years[years.length - 1];
                     if (years.length > 1 && !currentEdu.startDate) currentEdu.startDate = years[0];
@@ -467,55 +493,34 @@ function fallbackParseResume(text: string) {
 
     // Helper function to extract project from lines
     // Tracks current project and groups multi-line descriptions
+    // NEW STRATEGY: ONLY main bullets (•) start new projects.
+    // ALL other lines (Tech Stack:, GitHub:, Live:, sub-bullets) are APPENDED.
     const extractProjectFromLines = (lines: string[]) => {
         const extractedProjects: any[] = [];
         let currentProject: any = null;
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const cleanLine = line.replace(/^[•\-\*\u2022\u2023\u25E6\u2043\u2219]\s*/, '').trim();
-
-            // Distinguish between main bullets (•) and sub-bullets (-)
-            // Only main bullets can start new projects
             const isMainBullet = /^[•\u2022\u2023\u25E6\u2043\u2219]/.test(line);
-            const isSubBullet = /^\s*[-\*]/.test(line) && !isMainBullet;
+            const cleanLine = line.replace(/^[•\-\*\u2022\u2023\u25E6\u2043\u2219]\s*/, '').trim();
 
             if (cleanLine.length < 3) continue;
 
-            // Check if this is a NEW project (only on MAIN bullet lines with clear pattern)
-            let isNewProject = false;
-            let projectName = '';
-            let projectDesc = '';
-
-            // Only main bullets can start new projects
+            // ONLY main bullets start new projects
             if (isMainBullet) {
-                // Pattern: "ProjectName - Description" where name is capitalized words
-                const match = cleanLine.match(/^([A-Z][A-Za-z0-9\-]+(?:\s+[A-Z][A-Za-z0-9\-]+){0,3})\s*[-–—:]\s+([A-Z].{5,})/);
-                if (match && match[1] && match[2]) {
-                    const potentialName = match[1].trim();
-                    if (!/^(Built|Developed|Created|Designed|Implemented|Working|Used)\s/i.test(potentialName) &&
-                        potentialName.length >= 3 && potentialName.length <= 40) {
-                        isNewProject = true;
-                        projectName = potentialName;
-                        projectDesc = match[2].trim();
-                    }
-                }
-
-                // Short standalone title on main bullet
-                if (!isNewProject && /^[A-Z][A-Za-z0-9\-]+(?:\s+[A-Z][A-Za-z0-9\-]+){0,2}$/.test(cleanLine) &&
-                    cleanLine.length >= 3 && cleanLine.length <= 30) {
-                    isNewProject = true;
-                    projectName = cleanLine;
-                }
-            }
-
-            if (isNewProject && projectName) {
                 // Save previous project
                 if (currentProject && currentProject.name) {
                     extractedProjects.push(currentProject);
                 }
 
+                // Extract name and description from "Name - Description" or "Name: Description"
+                const match = cleanLine.match(/^([^-–—:]+)[\s]*[-–—:]\s+(.+)/);
+                const projectName = match ? match[1].trim() : cleanLine;
+                const projectDesc = match ? match[2].trim() : '';
+
+                // Extract URLs from the line
                 const urlMatches = cleanLine.match(/https?:\/\/[^\s)>]+/gi) || [];
+
                 currentProject = {
                     name: projectName,
                     description: projectDesc,
@@ -524,7 +529,7 @@ function fallbackParseResume(text: string) {
                     github: urlMatches.find(u => u.includes('github.com')) || ''
                 };
 
-                // Extract technologies
+                // Extract technologies from the line
                 for (const tech of Array.from(TECH_KEYWORDS)) {
                     if (new RegExp(`\\b${tech.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(cleanLine)) {
                         const proper = tech.split(/[\s-]/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
@@ -532,10 +537,45 @@ function fallbackParseResume(text: string) {
                     }
                 }
             } else if (currentProject) {
-                // Add to current project
-                currentProject.description += (currentProject.description ? ' ' : '') + cleanLine;
+                // ALL non-bullet lines are appended to the current project
 
-                // Extract more tech
+                // Handle special metadata lines
+                if (/^Tech\s*Stack\s*:/i.test(cleanLine)) {
+                    // Extract tech from "Tech Stack: React, Node.js, MongoDB"
+                    const techList = cleanLine.replace(/^Tech\s*Stack\s*:\s*/i, '').split(/[,\s]+/);
+                    for (const t of techList) {
+                        const trimmed = t.trim();
+                        if (trimmed.length > 1 && !currentProject.technologies.some((x: string) => x.toLowerCase() === trimmed.toLowerCase())) {
+                            currentProject.technologies.push(trimmed);
+                        }
+                    }
+                } else if (/^GitHub\s*:/i.test(cleanLine)) {
+                    // Extract GitHub URL
+                    const urlMatch = cleanLine.match(/https?:\/\/github\.com[^\s)>]+/i);
+                    if (urlMatch) currentProject.github = urlMatch[0];
+                    // Also check for Live URL on the same line
+                    const liveMatch = cleanLine.match(/Live\s*:\s*(https?:\/\/[^\s)>]+)/i);
+                    if (liveMatch) currentProject.url = liveMatch[1];
+                } else if (/^Live\s*:/i.test(cleanLine)) {
+                    // Extract Live URL
+                    const urlMatch = cleanLine.match(/https?:\/\/[^\s)>]+/);
+                    if (urlMatch) currentProject.url = urlMatch[0];
+                } else if (/^https?:\/\//.test(cleanLine)) {
+                    // Standalone URL line
+                    const urlMatch = cleanLine.match(/https?:\/\/[^\s)>]+/);
+                    if (urlMatch) {
+                        if (urlMatch[0].includes('github.com') && !currentProject.github) {
+                            currentProject.github = urlMatch[0];
+                        } else if (!currentProject.url) {
+                            currentProject.url = urlMatch[0];
+                        }
+                    }
+                } else {
+                    // Regular description line - append
+                    currentProject.description += ' ' + cleanLine;
+                }
+
+                // Extract technologies from any line
                 for (const tech of Array.from(TECH_KEYWORDS)) {
                     if (new RegExp(`\\b${tech.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(cleanLine)) {
                         const proper = tech.split(/[\s-]/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
@@ -544,15 +584,23 @@ function fallbackParseResume(text: string) {
                         }
                     }
                 }
-            } else {
-                // First line, try to start a project
-                const builtMatch = cleanLine.match(/^(?:Built|Developed|Created)\s+([A-Z][A-Za-z0-9\-]+(?:\s+[A-Z][A-Za-z0-9\-]+)*)/i);
-                if (builtMatch) {
-                    currentProject = { name: builtMatch[1], description: cleanLine, technologies: [], url: '', github: '' };
-                }
+            } else if (i === 0) {
+                // First line without bullet - treat as first project
+                const match = cleanLine.match(/^([^-–—:]+)[\s]*[-–—:]\s+(.+)/);
+                const projectName = match ? match[1].trim() : cleanLine;
+                const projectDesc = match ? match[2].trim() : '';
+
+                currentProject = {
+                    name: projectName,
+                    description: projectDesc,
+                    technologies: [],
+                    url: '',
+                    github: ''
+                };
             }
         }
 
+        // Don't forget the last project
         if (currentProject && currentProject.name) {
             extractedProjects.push(currentProject);
         }
@@ -633,6 +681,35 @@ function fallbackParseResume(text: string) {
         skills: finalSkills.length, experience: experience.length, education: education.length, projects: finalProjects.length
     });
 
+    try {
+        const logData = `
+================================================================================
+TIMESTAMP: ${new Date().toISOString()}
+================================================================================
+
+RAW TEXT LENGTH: ${text.length}
+NORMALIZED TEXT LENGTH: ${normalizedText.length}
+
+--------------------------------------------------------------------------------
+NORMALIZED TEXT PREVIEW:
+--------------------------------------------------------------------------------
+${normalizedText}
+
+--------------------------------------------------------------------------------
+DETECTED SECTIONS:
+--------------------------------------------------------------------------------
+${sections.map(s => `${s.type.toUpperCase()} (Lines ${s.startIdx}-${s.endIdx}):\n${s.lines.join('\n')}`).join('\n\n')}
+
+--------------------------------------------------------------------------------
+EXTRACTED DATA:
+--------------------------------------------------------------------------------
+PROJECTS: ${JSON.stringify(finalProjects, null, 2)}
+EDUCATION: ${JSON.stringify(education, null, 2)}
+EXPERIENCE: ${JSON.stringify(experience, null, 2)}
+`;
+        fs.writeFileSync(path.join(process.cwd(), 'resume_debug_log.txt'), logData);
+    } catch (e) { console.error('Failed to write debug log', e); }
+
     return {
         name: name || '',
         email: email || '',
@@ -651,6 +728,25 @@ function fallbackParseResume(text: string) {
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limiting - 20 parses per hour per IP
+        const ip = getClientIP(request);
+        const { success: rateLimitOk, resetTime } = rateLimit(
+            `parse-resume:${ip}`,
+            RATE_LIMITS.RESUME_PARSE.limit,
+            RATE_LIMITS.RESUME_PARSE.windowMs
+        );
+
+        if (!rateLimitOk) {
+            const retryAfter = Math.ceil((resetTime - Date.now()) / 1000);
+            return NextResponse.json(
+                { error: 'Too many resume parsing requests. Please try again later.' },
+                {
+                    status: 429,
+                    headers: { 'Retry-After': String(retryAfter) }
+                }
+            );
+        }
+
         const formData = await request.formData();
         const file = formData.get('resume') as File;
 

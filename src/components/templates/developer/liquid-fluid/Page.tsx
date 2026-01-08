@@ -188,11 +188,15 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[1, 2, 3].map((item) => (
+                        {displayData.projects.map((project, i) => (
                             <motion.div
-                                key={item}
+                                key={i}
                                 whileHover={{ y: -10 }}
-                                className="group relative bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm"
+                                className={`group relative bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-black/20 relative overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 group-hover:opacity-100 transition-opacity" />
@@ -202,11 +206,18 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
                                 </div>
                                 <div className="p-6">
                                     <h3 className="text-2xl font-bold mb-2 group-hover:text-blue-400 transition-colors">
-                                        Liquid Flow {item}
+                                        {project.name}
                                     </h3>
                                     <p className="text-slate-400 mb-6">
-                                        Adaptive interface with fluid animations and state management.
+                                        {project.description}
                                     </p>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {project.technologies?.map((tech, j) => (
+                                            <span key={j} className="text-xs text-blue-300 bg-blue-500/10 px-2 py-1 rounded-full">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
                                     <div className="flex items-center gap-2 text-sm font-bold text-blue-400">
                                         <span>View Case Study</span>
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />

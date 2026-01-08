@@ -131,13 +131,17 @@ export default function MagazineEditorialPage({ data }: { data?: PortfolioData }
                     </div>
 
                     <div className="space-y-32">
-                        {[1, 2, 3].map((item) => (
+                        {displayData.projects.map((project, i) => (
                             <motion.div
-                                key={item}
+                                key={i}
                                 initial={{ opacity: 0, y: 50 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group cursor-pointer"
+                                className={`group ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="grid grid-cols-12 gap-8 items-center">
                                     <div className="col-span-12 lg:col-span-7 order-2 lg:order-1">
@@ -156,18 +160,20 @@ export default function MagazineEditorialPage({ data }: { data?: PortfolioData }
                                     </div>
                                     <div className="col-span-12 lg:col-span-4 lg:col-start-9 order-1 lg:order-2">
                                         <div className="font-sans text-xs uppercase tracking-widest mb-4 text-[#FF4D00]">
-                                            Project 0{item}
+                                            Project 0{i + 1}
                                         </div>
                                         <h3 className="text-5xl font-light mb-6 group-hover:italic transition-all">
-                                            Digital Experience
+                                            {project.name}
                                         </h3>
                                         <p className="text-lg text-gray-600 mb-8 font-light leading-relaxed">
-                                            A comprehensive study in digital minimalism and typographic hierarchy.
-                                            Built with Next.js and Tailwind CSS.
+                                            {project.description}
                                         </p>
-                                        <div className="flex gap-4 font-sans text-sm uppercase tracking-wide">
-                                            <span className="border border-black px-3 py-1 rounded-full">Design</span>
-                                            <span className="border border-black px-3 py-1 rounded-full">Development</span>
+                                        <div className="flex gap-4 font-sans text-sm uppercase tracking-wide flex-wrap">
+                                            {project.technologies?.map((tech) => (
+                                                <span key={tech} className="border border-black px-3 py-1 rounded-full">
+                                                    {tech}
+                                                </span>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>

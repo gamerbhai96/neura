@@ -126,12 +126,18 @@ export default function MemphisDesignPage({ data }: { data?: PortfolioData }) {
                                 whileInView={{ opacity: 1, y: 0, rotate: i % 2 === 0 ? 2 : -2 }}
                                 viewport={{ once: true }}
                                 whileHover={{ rotate: 0, scale: 1.02 }}
-                                className="bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_black]"
+                                className={`bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_black] ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video mb-6 flex items-center justify-center" style={{ backgroundColor: colors[i % colors.length] }}>
                                     <Star className="w-16 h-16 text-white" />
                                 </div>
-                                <h3 className="text-3xl font-black mb-2">{project.name}</h3>
+                                <h3 className="text-3xl font-black mb-2">
+                                    {project.name}
+                                </h3>
                                 <p className="text-gray-600 mb-4">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies?.map((tech, j) => (

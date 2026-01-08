@@ -164,7 +164,11 @@ export default function MatrixRainPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="bg-black/50 border border-green-500/30 p-6 hover:border-green-500 transition-all group"
+                                className={`bg-black/50 border border-green-500/30 p-6 hover:border-green-500 transition-all group ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="text-green-500/50 text-xs mb-2">// project_{i + 1}</div>
                                 <h3 className="text-2xl font-bold mb-2 text-green-400 group-hover:text-green-300 transition-colors">

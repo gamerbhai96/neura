@@ -234,8 +234,17 @@ export default function GalacticOrbitPage({ data }: GalacticOrbitPageProps) {
                     <InfoPanel title="Projects" onClose={() => setActiveSection(null)}>
                         <div className="space-y-6">
                             {displayData.projects.map((project, i) => (
-                                <div key={i} className="bg-white/5 p-6 rounded-xl border border-white/10">
-                                    <h3 className="text-xl font-bold text-white mb-2">{project.name}</h3>
+                                <div
+                                    key={i}
+                                    className={`bg-white/5 p-6 rounded-xl border border-white/10 ${project.url || project.github ? 'cursor-pointer hover:border-white/30' : ''}`}
+                                    onClick={() => {
+                                        const url = project.url || project.github;
+                                        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                    }}
+                                >
+                                    <h3 className="text-xl font-bold text-white mb-2">
+                                        {project.name}
+                                    </h3>
                                     <p className="text-gray-400 text-sm mb-4">{project.description}</p>
                                     <div className="flex flex-wrap gap-2">
                                         {project.technologies.map((tech, j) => (

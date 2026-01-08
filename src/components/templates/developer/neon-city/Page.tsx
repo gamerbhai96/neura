@@ -156,8 +156,17 @@ function Scene({ data }: { data: PortfolioData }) {
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {data.projects.map((project, i) => (
-                                        <div key={i} className="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-pink-500/50 transition-colors group">
-                                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">{project.name}</h3>
+                                        <div
+                                            key={i}
+                                            className={`bg-white/5 p-6 rounded-xl border border-white/10 hover:border-pink-500/50 transition-colors group ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                            onClick={() => {
+                                                const url = project.url || project.github;
+                                                if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                            }}
+                                        >
+                                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">
+                                                {project.name}
+                                            </h3>
                                             <p className="text-gray-400 text-sm mb-4">{project.description}</p>
                                             <div className="flex flex-wrap gap-2">
                                                 {project.technologies.map((tech, j) => (

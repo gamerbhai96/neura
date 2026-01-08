@@ -41,31 +41,25 @@ export default function Projects({ data }: ProjectsProps) {
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
                                     whileHover={{ y: -5 }}
-                                    className="group relative border border-green-500/30 bg-black/50 backdrop-blur-sm p-6 rounded-lg neon-border hover:border-pink-500 transition-all"
+                                    className={`group relative border border-green-500/30 bg-black/50 backdrop-blur-sm p-6 rounded-lg neon-border hover:border-pink-500 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                    onClick={() => {
+                                        const url = project.url || project.github;
+                                        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                    }}
                                 >
                                     {/* Project Header */}
                                     <div className="flex items-start justify-between mb-4">
                                         <Folder className="w-10 h-10 text-green-400 group-hover:text-pink-500 transition-colors" />
                                         <div className="flex items-center space-x-3">
                                             {project.github && (
-                                                <a
-                                                    href={project.github}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-green-400 hover:text-pink-500 transition-colors"
-                                                >
+                                                <span className="text-green-400 hover:text-pink-500 transition-colors">
                                                     <Github className="w-5 h-5" />
-                                                </a>
+                                                </span>
                                             )}
                                             {project.url && (
-                                                <a
-                                                    href={project.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-green-400 hover:text-pink-500 transition-colors"
-                                                >
+                                                <span className="text-green-400 hover:text-pink-500 transition-colors">
                                                     <ExternalLink className="w-5 h-5" />
-                                                </a>
+                                                </span>
                                             )}
                                         </div>
                                     </div>

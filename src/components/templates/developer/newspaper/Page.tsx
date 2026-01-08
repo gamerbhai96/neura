@@ -116,7 +116,11 @@ export default function NewspaperPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="border-b border-gray-300 pb-6"
+                                className={`border-b border-gray-300 pb-6 ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="text-xs uppercase tracking-widest text-gray-500 mb-2">Project Report #{i + 1}</div>
                                 <h3 className="text-xl font-bold mb-2" style={{ fontFamily: 'Georgia, serif' }}>

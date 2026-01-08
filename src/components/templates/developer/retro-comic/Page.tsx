@@ -128,15 +128,21 @@ export default function RetroComicPage({ data }: { data?: PortfolioData }) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 whileHover={{ scale: 1.02, rotate: 0 }}
-                                className="bg-white border-4 border-black p-8 relative"
+                                className={`bg-white border-4 border-black p-8 relative ${project.url || project.github ? 'cursor-pointer' : ''}`}
                                 style={{ boxShadow: '6px 6px 0 #000' }}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 {/* Action burst */}
                                 <div className="absolute -top-4 -right-4 bg-yellow-400 border-2 border-black px-3 py-1 font-black text-sm rotate-12"
                                     style={{ boxShadow: '2px 2px 0 #000' }}>
                                     #{String(i + 1).padStart(2, '0')}
                                 </div>
-                                <h3 className="text-3xl font-black mb-4 uppercase">{project.name}</h3>
+                                <h3 className="text-3xl font-black mb-4 uppercase">
+                                    {project.name}
+                                </h3>
                                 <p className="text-gray-700 mb-6 font-medium">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies?.map((tech, j) => (

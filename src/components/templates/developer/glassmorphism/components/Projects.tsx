@@ -25,7 +25,11 @@ export default function Projects({ data }: { data: PortfolioData }) {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="group glass-card rounded-3xl backdrop-blur-lg bg-white/5 border border-white/10 overflow-hidden hover:bg-white/10 transition-all duration-300"
+                            className={`group glass-card rounded-3xl backdrop-blur-lg bg-white/5 border border-white/10 overflow-hidden hover:bg-white/10 transition-all duration-300 ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                            onClick={() => {
+                                const url = project.url || project.github;
+                                if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                            }}
                         >
                             <div className="h-48 bg-gradient-to-br from-purple-500/20 to-pink-500/20 relative group-hover:scale-105 transition-transform duration-500">
                                 <div className="absolute inset-0 flex items-center justify-center">
@@ -40,14 +44,14 @@ export default function Projects({ data }: { data: PortfolioData }) {
                                     </h3>
                                     <div className="flex gap-2">
                                         {project.github && (
-                                            <a href={project.github} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white">
+                                            <span className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white">
                                                 <Github className="w-5 h-5" />
-                                            </a>
+                                            </span>
                                         )}
                                         {project.url && (
-                                            <a href={project.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white">
+                                            <span className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white">
                                                 <ExternalLink className="w-5 h-5" />
-                                            </a>
+                                            </span>
                                         )}
                                     </div>
                                 </div>

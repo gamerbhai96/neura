@@ -149,7 +149,11 @@ export default function DarkAcademiaPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group bg-[#1a1710] border border-[#3d3528] p-8 hover:border-[#c4a35a]/50 transition-all"
+                                className={`group bg-[#1a1710] border border-[#3d3528] p-8 hover:border-[#c4a35a]/50 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="flex items-start justify-between mb-4">
                                     <span className="text-[#c4a35a] text-sm tracking-widest">OPUS {i + 1}</span>

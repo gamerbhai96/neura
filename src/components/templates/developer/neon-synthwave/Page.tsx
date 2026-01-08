@@ -141,7 +141,11 @@ export default function NeonSynthwavePage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group bg-[#0d0221]/80 backdrop-blur-sm border-2 border-[#ff00ff]/30 p-8 hover:border-[#00ffff] transition-all hover:shadow-[0_0_30px_rgba(0,255,255,0.2)]"
+                                className={`group bg-[#0d0221]/80 backdrop-blur-sm border-2 border-[#ff00ff]/30 p-8 hover:border-[#00ffff] transition-all hover:shadow-[0_0_30px_rgba(0,255,255,0.2)] ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-gradient-to-br from-[#ff00ff]/20 to-[#00ffff]/20 mb-6 flex items-center justify-center">
                                     <Zap className="w-16 h-16 text-[#ff00ff]/50 group-hover:text-[#00ffff] transition-colors" />

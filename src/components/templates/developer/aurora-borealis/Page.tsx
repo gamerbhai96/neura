@@ -164,12 +164,18 @@ export default function AuroraBorealisPage({ data }: { data?: PortfolioData }) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-emerald-500/30 transition-all"
+                                className={`group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-emerald-500/30 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-xl mb-6 flex items-center justify-center">
                                     <Sparkles className="w-12 h-12 text-emerald-400/50 group-hover:text-emerald-400 transition-colors" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-2 group-hover:text-emerald-400 transition-colors">{project.name}</h3>
+                                <h3 className="text-xl font-bold mb-2 group-hover:text-emerald-400 transition-colors">
+                                    {project.name}
+                                </h3>
                                 <p className="text-white/60 mb-4">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies?.map((tech, j) => (

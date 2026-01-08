@@ -1,0 +1,187 @@
+
+================================================================================
+TIMESTAMP: 2026-01-06T16:44:00.487Z
+================================================================================
+
+RAW TEXT LENGTH: 2161
+NORMALIZED TEXT LENGTH: 2161
+
+--------------------------------------------------------------------------------
+NORMALIZED TEXT PREVIEW:
+--------------------------------------------------------------------------------
+NAGBHUSHAN HEGDE
+FULL STACK DEVELOPER
+OBJECTIVE
+Full-stack developer passionate about creating scalable, high-
+performance applications by combining clean design, robust
+backend logic, and modern frontend technologies.
+PROJECTS
+Perfume Brand E-Commerce Platform
+Repo Link: https://github.com/gamerbhai96/eyes-perfume-main
+Tech Stack: React.js, Node.js, MongoDB, AdminJS, TypeScript,
+Tailwind CSS
+Description: Full-stack e-commerce platform for a perfume brand
+with a React.js frontend and Node.js/MongoDB backend.
+modes, esponsive last airind iguily management and a
+Finance-bot-Al - Al-Powered Finance Chatbot
+Repo Link: https://github.com/gamerbhai96/Finance-bot-ai
+Tech Stack: Next.js, Puter.js
+Description: Al chatbot for finance queries with instant,
+conversational responses. Built with Next.js frontend and Puter.js
+integration, offering a clean, responsive chat interface without
+Ai-Text-to-Speech - Real-Time Speech Generator
+Repo Link: https://github.com/gamerbhai96/Ai-Text-to-Speech
+Tech Stack: JavaScript
+Description: Lightweight app that converts text into natural-
+sounding speech in real time. Highlights Al integration for media
+processing with a simple, user-friendly interface.
+Pinterest-Clone - Pinterest-Style Web App
+Repo Link: https://github.com/gamerbhai96/Pintrest-Clone
+Tech Stack: Express.js, EJS, JavaScript, CSS
+Description: Pinterest-inspired web app with secure user
+authentication, image uploads, and board/pin organization.
+CONTACT
+nagbhushanhegde361@gmail.com
+8792259629
+Hubli, Karnataka
+ABOUT ME
+Passionate full-stack developer
+focused on building responsive,
+scalable, and intuitive web
+applications. I value clean code,
+modern Ul/UX practices, and
+solving real-world problems with
+technology.
+EDUCATION
+KLE'S BCA, HUBLI
+Bachelor of Computer
+Applications (BCA), Computer
+Science
+2023 - Present
+CHINMAYA PU COLLEGE,
+HUBLI
+11th & 12th Grade, Commerce |
+Grade: 94.83 %
+2021-2023
+SBI OAES SCHOOL, HUBLI
+10th Grade | Grade: 90.56%
+2021
+SKILLS
+Frontend: React.js, JavaScript
+(ES6+), HTML5, CSS3, Tailwind CSS
+Backend: Node.js, Express.js, REST
+APls, Django, Flask, FastAPI
+Database: MongoDB, Mongoose
+Tools & Deployment: Git, Git
+
+
+
+--------------------------------------------------------------------------------
+DETECTED SECTIONS:
+--------------------------------------------------------------------------------
+SUMMARY (Lines 3-5):
+Full-stack developer passionate about creating scalable, high-
+performance applications by combining clean design, robust
+backend logic, and modern frontend technologies.
+
+PROJECTS (Lines 7-34):
+Perfume Brand E-Commerce Platform
+Repo Link: https://github.com/gamerbhai96/eyes-perfume-main
+Tech Stack: React.js, Node.js, MongoDB, AdminJS, TypeScript,
+Tailwind CSS
+Description: Full-stack e-commerce platform for a perfume brand
+with a React.js frontend and Node.js/MongoDB backend.
+modes, esponsive last airind iguily management and a
+Finance-bot-Al - Al-Powered Finance Chatbot
+Repo Link: https://github.com/gamerbhai96/Finance-bot-ai
+Tech Stack: Next.js, Puter.js
+Description: Al chatbot for finance queries with instant,
+conversational responses. Built with Next.js frontend and Puter.js
+integration, offering a clean, responsive chat interface without
+Ai-Text-to-Speech - Real-Time Speech Generator
+Repo Link: https://github.com/gamerbhai96/Ai-Text-to-Speech
+Tech Stack: JavaScript
+Description: Lightweight app that converts text into natural-
+sounding speech in real time. Highlights Al integration for media
+processing with a simple, user-friendly interface.
+Pinterest-Clone - Pinterest-Style Web App
+Repo Link: https://github.com/gamerbhai96/Pintrest-Clone
+Tech Stack: Express.js, EJS, JavaScript, CSS
+Description: Pinterest-inspired web app with secure user
+authentication, image uploads, and board/pin organization.
+CONTACT
+nagbhushanhegde361@gmail.com
+8792259629
+Hubli, Karnataka
+
+SUMMARY (Lines 36-42):
+Passionate full-stack developer
+focused on building responsive,
+scalable, and intuitive web
+applications. I value clean code,
+modern Ul/UX practices, and
+solving real-world problems with
+technology.
+
+EDUCATION (Lines 44-56):
+KLE'S BCA, HUBLI
+Bachelor of Computer
+Applications (BCA), Computer
+Science
+2023 - Present
+CHINMAYA PU COLLEGE,
+HUBLI
+11th & 12th Grade, Commerce |
+Grade: 94.83 %
+2021-2023
+SBI OAES SCHOOL, HUBLI
+10th Grade | Grade: 90.56%
+2021
+
+SKILLS (Lines 58-63):
+Frontend: React.js, JavaScript
+(ES6+), HTML5, CSS3, Tailwind CSS
+Backend: Node.js, Express.js, REST
+APls, Django, Flask, FastAPI
+Database: MongoDB, Mongoose
+Tools & Deployment: Git, Git
+
+--------------------------------------------------------------------------------
+EXTRACTED DATA:
+--------------------------------------------------------------------------------
+PROJECTS: [
+  {
+    "name": "Perfume Brand E-Commerce Platform",
+    "description": " Repo Link: https://github.com/gamerbhai96/eyes-perfume-main Tailwind CSS Description: Full-stack e-commerce platform for a perfume brand with a React.js frontend and Node.js/MongoDB backend. modes, esponsive last airind iguily management and a Finance-bot-Al - Al-Powered Finance Chatbot Repo Link: https://github.com/gamerbhai96/Finance-bot-ai Description: Al chatbot for finance queries with instant, conversational responses. Built with Next.js frontend and Puter.js integration, offering a clean",
+    "technologies": [
+      "Github",
+      "React.js",
+      "Node.js",
+      "MongoDB",
+      "AdminJS",
+      "TypeScript",
+      "React",
+      "Node",
+      "Css",
+      "Tailwind",
+      "Ai",
+      "Next.js",
+      "Puter.js",
+      "JavaScript",
+      "Express.js"
+    ],
+    "url": "",
+    "github": ""
+  }
+]
+EDUCATION: [
+  {
+    "school": "KLE'S HUBLI",
+    "degree": "BCA",
+    "field": "",
+    "startDate": "",
+    "endDate": "2023",
+    "_rawText": "KLE'S BCA, HUBLI"
+  }
+]
+EXPERIENCE: []

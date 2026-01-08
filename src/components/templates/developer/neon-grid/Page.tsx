@@ -125,12 +125,18 @@ export default function NeonGridPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group border border-cyan-500/30 p-8 relative overflow-hidden hover:border-fuchsia-500/50 transition-all"
+                                className={`group border border-cyan-500/30 p-8 relative overflow-hidden hover:border-fuchsia-500/50 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="relative">
                                     <div className="text-xs text-cyan-400 mb-2">&gt; PROJECT_{String(i + 1).padStart(2, '0')}</div>
-                                    <h3 className="text-2xl font-bold mb-2 group-hover:text-fuchsia-400 transition-colors">{project.name}</h3>
+                                    <h3 className="text-2xl font-bold mb-2 group-hover:text-fuchsia-400 transition-colors">
+                                        {project.name}
+                                    </h3>
                                     <p className="text-white/60 mb-4">{project.description}</p>
                                     <div className="flex flex-wrap gap-2">
                                         {project.technologies?.map((tech, j) => (

@@ -129,7 +129,11 @@ export default function MinimalSwissPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0 }}
                                 whileInView={{ opacity: 1 }}
                                 viewport={{ once: true }}
-                                className="group py-12 border-b border-black/10 hover:bg-white transition-colors cursor-pointer"
+                                className={`group py-12 border-b border-black/10 hover:bg-white transition-colors ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="grid grid-cols-12 gap-6 items-center">
                                     <div className="col-span-1">

@@ -89,7 +89,11 @@ export default function MonochromeElegantPage({ data }: { data?: PortfolioData }
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6 }}
-                                className="group"
+                                className={`group ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="grid md:grid-cols-2 gap-12 items-center">
                                     <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
@@ -97,7 +101,9 @@ export default function MonochromeElegantPage({ data }: { data?: PortfolioData }
                                     </div>
                                     <div>
                                         <div className="text-sm text-gray-400 mb-4">0{i + 1}</div>
-                                        <h3 className="text-4xl font-light mb-4">{project.name}</h3>
+                                        <h3 className="text-4xl font-light mb-4">
+                                            {project.name}
+                                        </h3>
                                         <p className="text-gray-600 mb-6">{project.description}</p>
                                         <div className="flex gap-4 text-sm text-gray-400">
                                             {project.technologies?.map((tech, j) => (

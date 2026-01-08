@@ -159,7 +159,11 @@ export default function GeometricArtPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group relative bg-white/5 border border-white/10 p-8 hover:border-[#4ecdc4]/50 transition-all"
+                                className={`group relative bg-white/5 border border-white/10 p-8 hover:border-[#4ecdc4]/50 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 {/* Corner accents */}
                                 <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-[#4ecdc4]" />

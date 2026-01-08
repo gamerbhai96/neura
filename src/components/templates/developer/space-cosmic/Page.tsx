@@ -192,25 +192,29 @@ export default function SpaceCosmicPage({ data }: { data?: PortfolioData }) {
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[1, 2, 3].map((item) => (
+                        {displayData.projects.map((project, i) => (
                             <motion.div
-                                key={item}
+                                key={i}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: item * 0.1 }}
-                                className="group relative bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-colors"
+                                transition={{ delay: i * 0.1 }}
+                                className={`group relative bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-colors ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-[4/3] bg-black/50 relative overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                                     <div className="absolute bottom-0 left-0 p-6 z-20">
-                                        <h3 className="text-2xl font-bold mb-2 group-hover:text-purple-400 transition-colors">Project {item}</h3>
-                                        <p className="text-white/60 text-sm">Next.js • Three.js • Tailwind</p>
+                                        <h3 className="text-2xl font-bold mb-2 group-hover:text-purple-400 transition-colors">{project.name}</h3>
+                                        <p className="text-white/60 text-sm">{project.technologies?.join(' • ')}</p>
                                     </div>
                                 </div>
                                 <div className="p-6">
                                     <p className="text-white/70 leading-relaxed mb-6">
-                                        A revolutionary platform exploring the boundaries of web performance and 3D interactivity.
+                                        {project.description}
                                     </p>
                                     <div className="flex items-center gap-4 text-sm font-medium text-purple-400">
                                         <span>View Case Study</span>

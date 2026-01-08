@@ -130,7 +130,11 @@ export default function BlueprintPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group border border-white/20 p-8 relative hover:border-cyan-400/50 transition-colors"
+                                className={`group border border-white/20 p-8 relative hover:border-cyan-400/50 transition-colors ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 {/* Corner accents */}
                                 <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-cyan-400" />
@@ -139,7 +143,9 @@ export default function BlueprintPage({ data }: { data?: PortfolioData }) {
                                 <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-cyan-400" />
 
                                 <div className="text-xs text-cyan-400 mb-2 tracking-widest">PROJECT_{String(i + 1).padStart(2, '0')}</div>
-                                <h3 className="text-2xl font-bold mb-4 group-hover:text-cyan-400 transition-colors">{project.name}</h3>
+                                <h3 className="text-2xl font-bold mb-4 group-hover:text-cyan-400 transition-colors">
+                                    {project.name}
+                                </h3>
                                 <p className="text-white/60 mb-6">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies?.map((tech, j) => (

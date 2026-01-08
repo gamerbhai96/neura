@@ -127,12 +127,18 @@ export default function GradientWavesPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 p-8 hover:bg-white/20 transition-all"
+                                className={`group bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 p-8 hover:bg-white/20 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-gradient-to-br from-white/10 to-white/5 rounded-2xl mb-6 flex items-center justify-center">
                                     <Waves className="w-16 h-16 text-white/30 group-hover:text-white/50 transition-colors" />
                                 </div>
-                                <h3 className="text-2xl font-bold mb-2">{project.name}</h3>
+                                <h3 className="text-2xl font-bold mb-2">
+                                    {project.name}
+                                </h3>
                                 <p className="text-white/70 mb-4">{project.description}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {project.technologies?.map((tech, j) => (

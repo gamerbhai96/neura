@@ -126,7 +126,11 @@ export default function GradientMeshPage({ data }: { data?: PortfolioData }) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="group relative bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 overflow-hidden hover:border-white/20 transition-all"
+                                className={`group relative bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 overflow-hidden hover:border-white/20 transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 {/* Gradient orb */}
                                 <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-[#ff6b6b] to-[#4ecdc4] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity" />

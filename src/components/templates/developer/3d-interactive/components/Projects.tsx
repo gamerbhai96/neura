@@ -24,7 +24,11 @@ export default function Projects({ data }: { data: PortfolioData }) {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="group bg-black/40 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-cyan-500/50 transition-all duration-500"
+                            className={`group bg-black/40 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-cyan-500/50 transition-all duration-500 ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                            onClick={() => {
+                                const url = project.url || project.github;
+                                if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                            }}
                         >
                             <div className="p-8">
                                 <div className="flex justify-between items-start mb-6">
@@ -33,14 +37,14 @@ export default function Projects({ data }: { data: PortfolioData }) {
                                     </h3>
                                     <div className="flex gap-3">
                                         {project.github && (
-                                            <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors">
+                                            <span className="text-white/50 hover:text-white transition-colors">
                                                 CODE
-                                            </a>
+                                            </span>
                                         )}
                                         {project.url && (
-                                            <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors">
+                                            <span className="text-white/50 hover:text-white transition-colors">
                                                 LIVE
-                                            </a>
+                                            </span>
                                         )}
                                     </div>
                                 </div>

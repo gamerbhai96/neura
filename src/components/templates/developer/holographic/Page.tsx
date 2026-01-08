@@ -123,9 +123,13 @@ export default function HolographicPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="group relative p-8 rounded-2xl border border-white/10 overflow-hidden"
+                                className={`group relative p-8 rounded-2xl border border-white/10 overflow-hidden ${project.url || project.github ? 'cursor-pointer' : ''}`}
                                 style={{
                                     background: 'linear-gradient(135deg, rgba(255,0,128,0.05), rgba(0,255,255,0.05), rgba(255,255,0,0.05))'
+                                }}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
                                 }}
                             >
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -137,7 +141,9 @@ export default function HolographicPage({ data }: { data?: PortfolioData }) {
                                         style={{ background: 'linear-gradient(135deg, rgba(255,0,128,0.2), rgba(0,255,255,0.2))' }}>
                                         <Star className="w-16 h-16 text-white/30" />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-2">{project.name}</h3>
+                                    <h3 className="text-2xl font-bold mb-2">
+                                        {project.name}
+                                    </h3>
                                     <p className="text-white/60 mb-4">{project.description}</p>
                                     <div className="flex flex-wrap gap-2">
                                         {project.technologies?.map((tech, j) => (

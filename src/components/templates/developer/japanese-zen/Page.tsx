@@ -124,7 +124,11 @@ export default function JapaneseZenPage({ data }: { data?: PortfolioData }) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8 }}
-                                className="group"
+                                className={`group ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="flex items-baseline justify-between mb-4">
                                     <span className="text-xs text-[#999] tracking-widest">0{i + 1}</span>

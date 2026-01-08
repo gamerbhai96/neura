@@ -191,26 +191,30 @@ export default function NeoBrutalismPage({ data }: { data?: PortfolioData }) {
                     <h2 className="text-6xl font-black uppercase mb-16 inline-block border-b-8 border-[#FF0080]">Selected Work</h2>
 
                     <div className="grid md:grid-cols-2 gap-12">
-                        {[1, 2, 3, 4].map((item) => (
+                        {displayData.projects.map((project, i) => (
                             <motion.div
-                                key={item}
+                                key={i}
                                 whileHover={{ y: -10 }}
-                                className="group border-4 border-black bg-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[6px] hover:translate-y-[6px] transition-all"
+                                className={`group border-4 border-black bg-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[6px] hover:translate-y-[6px] transition-all ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-video bg-gray-100 border-b-4 border-black relative overflow-hidden">
                                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
                                     {/* Placeholder for project image */}
                                     <div className="w-full h-full flex items-center justify-center text-4xl font-black text-black/10 uppercase">
-                                        Project {item}
+                                        {project.name.substring(0, 2)}
                                     </div>
                                 </div>
                                 <div className="p-8">
-                                    <h3 className="text-3xl font-black uppercase mb-4">Project Name {item}</h3>
+                                    <h3 className="text-3xl font-black uppercase mb-4">{project.name}</h3>
                                     <p className="font-bold text-gray-600 mb-6">
-                                        A brutalist approach to modern web development. High contrast, bold typography, and raw aesthetics.
+                                        {project.description}
                                     </p>
                                     <div className="flex flex-wrap gap-3">
-                                        {['React', 'TypeScript', 'Tailwind'].map((tag) => (
+                                        {project.technologies?.map((tag) => (
                                             <span key={tag} className="px-3 py-1 border-2 border-black font-bold text-xs uppercase bg-[#A8FF78]">
                                                 {tag}
                                             </span>

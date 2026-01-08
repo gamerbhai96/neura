@@ -125,14 +125,20 @@ export default function PixelArtPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="bg-[#1a1c2c] p-6 pixel-border"
+                                className={`bg-[#1a1c2c] p-6 pixel-border ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="flex items-start gap-4">
                                     <div className="w-12 h-12 bg-[#3b5dc9] flex items-center justify-center pixel-border">
                                         <Star className="w-6 h-6 text-[#ffcd75]" fill="#ffcd75" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="text-sm text-[#f4f4f4] mb-2">{project.name?.toUpperCase()}</h3>
+                                        <h3 className="text-sm text-[#f4f4f4] mb-2">
+                                            {project.name?.toUpperCase()}
+                                        </h3>
                                         <p className="text-[8px] text-[#5a6988] mb-4 leading-loose">{project.description}</p>
                                         <div className="flex flex-wrap gap-2">
                                             {project.technologies?.map((tech, j) => (

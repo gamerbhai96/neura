@@ -1,8 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserByEmail, verifyPassword, generateToken, setAuthCookie } from '@/lib/auth';
+import { rateLimit, getClientIP, RATE_LIMITS } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limiting - 5 attempts per 5 minutes per IP
+        const ip = getClientIP(request);
+        const { success: rateLimitOk, remaining, resetTime } = rateLimit(
+            `login:${ip}`,
+            RATE_LIMITS.LOGIN.limit,
+            RATE_LIMITS.LOGIN.windowMs
+        );
+
+        if (!rateLimitOk) {
+            const retryAfter = Math.ceil((resetTime - Date.now()) / 1000);
+            return NextResponse.json(
+                { error: 'Too many login attempts. Please try again later.' },
+                {
+                    status: 429,
+                    headers: { 'Retry-After': String(retryAfter) }
+                }
+            );
+        }
+
         const { email, password } = await request.json();
 
         // Validation

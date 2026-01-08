@@ -121,7 +121,11 @@ export default function Cyberpunk2077Page({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="group bg-[#0a0a0f] border border-[#00f6ff]/30 p-6 relative overflow-hidden hover:border-[#fcee0a] transition-colors"
+                                className={`group bg-[#0a0a0f] border border-[#00f6ff]/30 p-6 relative overflow-hidden hover:border-[#fcee0a] transition-colors ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 {/* Corner accents */}
                                 <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#ff003c]" />

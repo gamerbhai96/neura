@@ -195,16 +195,22 @@ export default function NatureOrganicPage({ data }: { data?: PortfolioData }) {
                     </div>
 
                     <div className="space-y-32">
-                        {[1, 2, 3].map((item, i) => (
+                        {displayData.projects.map((project, i) => (
                             <motion.div
-                                key={item}
+                                key={i}
                                 initial={{ opacity: 0, y: 50 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 className={`flex flex-col lg:flex-row gap-16 items-center ${i % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
                             >
                                 <div className="w-full lg:w-1/2">
-                                    <div className="aspect-[4/3] rounded-[2rem] overflow-hidden bg-[#E8EFE6] relative group cursor-pointer">
+                                    <div
+                                        className={`aspect-[4/3] rounded-[2rem] overflow-hidden bg-[#E8EFE6] relative group ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                        onClick={() => {
+                                            const url = project.url || project.github;
+                                            if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                        }}
+                                    >
                                         <div className="absolute inset-0 bg-[#4A6741]/10 group-hover:bg-transparent transition-colors duration-500" />
                                         <motion.div
                                             whileHover={{ scale: 1.05 }}
@@ -214,14 +220,21 @@ export default function NatureOrganicPage({ data }: { data?: PortfolioData }) {
                                     </div>
                                 </div>
                                 <div className="w-full lg:w-1/2 space-y-6">
-                                    <div className="text-sm font-medium text-[#4A6741] uppercase tracking-wider">Project 0{item}</div>
-                                    <h3 className="text-4xl font-serif font-medium text-[#1A261B]">Organic Interface</h3>
+                                    <div className="text-sm font-medium text-[#4A6741] uppercase tracking-wider">Project 0{i + 1}</div>
+                                    <h3
+                                        className={`text-4xl font-serif font-medium text-[#1A261B] ${project.url || project.github ? 'cursor-pointer hover:text-[#4A6741] transition-colors' : ''}`}
+                                        onClick={() => {
+                                            const url = project.url || project.github;
+                                            if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                        }}
+                                    >
+                                        {project.name}
+                                    </h3>
                                     <p className="text-lg text-[#5C7A53] leading-relaxed">
-                                        A digital ecosystem designed to grow with the user.
-                                        Featuring fluid interactions and natural progression paths.
+                                        {project.description}
                                     </p>
                                     <div className="flex flex-wrap gap-3 pt-4">
-                                        {['React', 'Tailwind', 'Framer Motion'].map((tag) => (
+                                        {project.technologies?.map((tag) => (
                                             <span key={tag} className="px-4 py-2 rounded-full bg-[#E8EFE6] text-[#4A6741] text-sm font-medium">
                                                 {tag}
                                             </span>

@@ -61,11 +61,15 @@ export default function Isometric3DPage({ data }: { data?: PortfolioData }) {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-12">
-                        {[1, 2].map((item) => (
+                        {displayData.projects.map((project, i) => (
                             <motion.div
-                                key={item}
+                                key={i}
                                 whileHover={{ scale: 1.02 }}
-                                className="group cursor-pointer"
+                                className={`group ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 <div className="aspect-[16/10] bg-slate-800 rounded-3xl overflow-hidden mb-6 relative">
                                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 group-hover:opacity-0 transition-opacity" />
@@ -73,8 +77,15 @@ export default function Isometric3DPage({ data }: { data?: PortfolioData }) {
                                         <div className="w-32 h-32 bg-slate-700/50 rounded-full blur-3xl" />
                                     </div>
                                 </div>
-                                <h3 className="text-3xl font-bold mb-2 group-hover:text-indigo-400 transition-colors">Project Name {item}</h3>
-                                <p className="text-slate-400">React • Next.js • WebGL</p>
+                                <h3 className="text-3xl font-bold mb-2 group-hover:text-indigo-400 transition-colors">{project.name}</h3>
+                                <p className="text-slate-400 mb-4">{project.description}</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {project.technologies?.map((tech, j) => (
+                                        <span key={j} className="text-sm font-medium text-indigo-400">
+                                            {tech}
+                                        </span>
+                                    ))}
+                                </div>
                             </motion.div>
                         ))}
                     </div>

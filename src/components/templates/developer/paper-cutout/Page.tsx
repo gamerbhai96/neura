@@ -112,7 +112,11 @@ export default function PaperCutoutPage({ data }: { data?: PortfolioData }) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 whileHover={{ rotate: 0, y: -5 }}
-                                className="relative"
+                                className={`relative ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                    const url = project.url || project.github;
+                                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                                }}
                             >
                                 {/* Paper shadow layers */}
                                 <div className="absolute inset-0 bg-amber-200 rounded-lg translate-x-2 translate-y-2" />
@@ -122,7 +126,9 @@ export default function PaperCutoutPage({ data }: { data?: PortfolioData }) {
                                         style={{ backgroundColor: paperColors[i % paperColors.length] }}>
                                         <FileText className="w-16 h-16 text-white/60" />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-2 text-gray-800">{project.name}</h3>
+                                    <h3 className="text-2xl font-bold mb-2 text-gray-800">
+                                        {project.name}
+                                    </h3>
                                     <p className="text-gray-600 mb-4">{project.description}</p>
                                     <div className="flex flex-wrap gap-2">
                                         {project.technologies?.map((tech, j) => (

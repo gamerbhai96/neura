@@ -263,6 +263,64 @@ function BuilderContent() {
                                             </>
                                         )}
                                     </button>
+
+                                    {/* Divider */}
+                                    <div className="flex items-center gap-4 mt-6">
+                                        <div className="flex-1 h-px bg-white/10"></div>
+                                        <span className="text-white/40 text-sm">or</span>
+                                        <div className="flex-1 h-px bg-white/10"></div>
+                                    </div>
+
+                                    {/* Skip Resume Button */}
+                                    <button
+                                        onClick={() => {
+                                            // Set empty default data for manual entry
+                                            setParsedData({
+                                                name: '',
+                                                email: '',
+                                                phone: '',
+                                                location: '',
+                                                bio: '',
+                                                role: '',
+                                                skills: [],
+                                                experience: [{
+                                                    company: '',
+                                                    position: '',
+                                                    startDate: '',
+                                                    endDate: '',
+                                                    description: '',
+                                                    highlights: []
+                                                }],
+                                                education: [{
+                                                    school: '',
+                                                    degree: '',
+                                                    field: '',
+                                                    startDate: '',
+                                                    endDate: ''
+                                                }],
+                                                projects: [{
+                                                    name: '',
+                                                    description: '',
+                                                    technologies: [],
+                                                    url: '',
+                                                    github: ''
+                                                }],
+                                                certifications: [],
+                                                links: {
+                                                    github: '',
+                                                    linkedin: '',
+                                                    twitter: '',
+                                                    website: '',
+                                                    portfolio: ''
+                                                }
+                                            });
+                                            setCurrentStep(2);
+                                        }}
+                                        className="w-full mt-4 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-medium py-3 rounded-xl transition-all flex items-center justify-center space-x-2 backdrop-blur-xl bg-white/[0.02]"
+                                    >
+                                        <Edit className="w-4 h-4" />
+                                        <span>Skip, enter details manually</span>
+                                    </button>
                                 </div>
                             </motion.div>
                         )}
@@ -374,8 +432,7 @@ function BuilderContent() {
                                                                 degree: '',
                                                                 field: '',
                                                                 startDate: '',
-                                                                endDate: '',
-                                                                description: ''
+                                                                endDate: ''
                                                             }
                                                         ]
                                                     });
