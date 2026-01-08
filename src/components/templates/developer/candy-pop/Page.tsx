@@ -1,325 +1,456 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Github, Linkedin, Heart, Star, Sparkles } from 'lucide-react';
+import { Mail, Github, Linkedin, Gamepad2, Star, Trophy, Zap } from 'lucide-react';
 import { PortfolioData } from '../../types';
 
 const mockData: PortfolioData = {
-    name: "Sweet Dev",
-    role: "Creative Developer",
-    email: "dev@candypop.io",
+    name: "Pixel Dev",
+    role: "Game UI Designer",
+    email: "dev@arcade.io",
     phone: "+1 555 000 0000",
-    location: "Candyland, CA",
-    bio: "Making the web a sweeter place, one pixel at a time. Life is short—add sprinkles!",
-    skills: ["React", "Vue", "Svelte", "CSS", "GSAP", "Three.js", "Figma", "Framer"],
-    experience: [{ company: "Sugar Rush Studios", position: "Lead Creative", startDate: "2020", endDate: "Present", description: "Crafting delightful experiences", highlights: [] }],
+    location: "Neo Tokyo",
+    bio: "Crafting interfaces that level up the user experience. Insert coin to continue.",
+    skills: ["React", "Unity", "Figma", "Motion", "Pixel Art", "UI/UX", "CSS", "Animation"],
+    experience: [{ company: "Arcade Studios", position: "Lead UI Designer", startDate: "2020", endDate: "Present", description: "Designing game interfaces that players love", highlights: [] }],
     education: [
-        { school: "Design Academy", degree: "BFA Interactive Design", field: "Design", startDate: "2016", endDate: "2020" }
+        { school: "Digital Arts Institute", degree: "BFA Game Design", field: "Game Design", startDate: "2016", endDate: "2020" }
     ],
     projects: [
-        { name: "Gumball", description: "Playful animation library", technologies: ["GSAP", "React"] },
-        { name: "Lollipop", description: "Color palette generator", technologies: ["Vue", "Canvas"] }
+        { name: "PixelQuest", description: "Retro RPG interface kit", technologies: ["Figma", "React"] },
+        { name: "NeonDash", description: "Racing game HUD system", technologies: ["Unity", "C#"] }
     ],
     links: { github: "https://github.com", linkedin: "https://linkedin.com" }
 };
 
-// Floating candy component
-const FloatingCandy = ({ emoji, x, y, delay, size }: { emoji: string; x: string; y: string; delay: number; size: number }) => (
+// CRT scanline overlay
+const ScanlineOverlay = () => (
+    <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.03]"
+        style={{
+            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px)',
+            backgroundSize: '100% 4px'
+        }}
+    />
+);
+
+// Neon tube light effect
+const NeonTube = ({ color, className }: { color: string; className?: string }) => (
     <motion.div
-        className="absolute text-4xl select-none pointer-events-none"
-        style={{ left: x, top: y, fontSize: `${size}px` }}
+        className={`rounded-full ${className}`}
+        style={{
+            background: color,
+            boxShadow: `0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color}50`
+        }}
         animate={{
-            y: [0, -20, 0],
-            rotate: [0, 10, -10, 0],
-            scale: [1, 1.1, 1]
+            opacity: [0.8, 1, 0.9, 1, 0.8],
+            boxShadow: [
+                `0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color}50`,
+                `0 0 15px ${color}, 0 0 30px ${color}, 0 0 60px ${color}60`,
+                `0 0 10px ${color}, 0 0 20px ${color}, 0 0 40px ${color}50`
+            ]
         }}
-        transition={{
-            duration: 4 + delay,
-            repeat: Infinity,
-            delay,
-            ease: "easeInOut"
+        transition={{ duration: 2, repeat: Infinity }}
+    />
+);
+
+// Pixel art star decoration
+const PixelStar = ({ x, y, delay, size = 8 }: { x: string; y: string; delay: number; size?: number }) => (
+    <motion.div
+        className="absolute pointer-events-none"
+        style={{ left: x, top: y }}
+        animate={{
+            opacity: [0.3, 1, 0.3],
+            scale: [0.8, 1.2, 0.8],
+            rotate: [0, 180, 360]
         }}
+        transition={{ duration: 3, repeat: Infinity, delay }}
     >
-        {emoji}
+        <svg width={size} height={size} viewBox="0 0 8 8" style={{ imageRendering: 'pixelated' }}>
+            <rect x="3" y="0" width="2" height="2" fill="#fef08a" />
+            <rect x="0" y="3" width="2" height="2" fill="#fef08a" />
+            <rect x="6" y="3" width="2" height="2" fill="#fef08a" />
+            <rect x="3" y="6" width="2" height="2" fill="#fef08a" />
+            <rect x="3" y="3" width="2" height="2" fill="#ffffff" />
+        </svg>
     </motion.div>
 );
 
-// Sprinkle component
-const Sprinkle = ({ color, top, left, rotate }: { color: string; top: string; left: string; rotate: number }) => (
-    <div
-        className="absolute w-1 h-4 rounded-full"
-        style={{ backgroundColor: color, top, left, transform: `rotate(${rotate}deg)` }}
-    />
+// Arcade button component
+const ArcadeButton = ({ color, children, onClick, className = '' }: {
+    color: string; children: React.ReactNode; onClick?: () => void; className?: string
+}) => (
+    <motion.button
+        onClick={onClick}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95, y: 2 }}
+        className={`relative px-6 py-3 font-bold uppercase tracking-wider rounded-lg ${className}`}
+        style={{
+            background: `linear-gradient(180deg, ${color} 0%, ${color}cc 100%)`,
+            boxShadow: `0 4px 0 ${color}80, 0 6px 20px ${color}40, inset 0 2px 0 rgba(255,255,255,0.3)`,
+            border: `2px solid ${color}`
+        }}
+    >
+        {children}
+    </motion.button>
+);
+
+// Arcade cabinet frame card
+const ArcadeCard = ({ children, className = '', glowColor = '#f0abfc' }: {
+    children: React.ReactNode; className?: string; glowColor?: string
+}) => (
+    <div className={`relative ${className}`}>
+        {/* Outer frame with neon border */}
+        <div className="relative rounded-xl overflow-hidden"
+            style={{
+                background: 'linear-gradient(180deg, #1e1b4b 0%, #0f0d24 100%)',
+                boxShadow: `0 0 30px ${glowColor}30, inset 0 0 30px rgba(0,0,0,0.5)`
+            }}>
+            {/* Top neon strip */}
+            <div className="h-1 w-full bg-gradient-to-r from-transparent via-pink-400 to-transparent" />
+            {/* Corner decorations */}
+            <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-pink-400/50" />
+            <div className="absolute top-2 right-2 w-3 h-3 border-r-2 border-t-2 border-cyan-400/50" />
+            <div className="absolute bottom-2 left-2 w-3 h-3 border-l-2 border-b-2 border-cyan-400/50" />
+            <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-pink-400/50" />
+            {/* Content */}
+            <div className="p-6">{children}</div>
+        </div>
+    </div>
+);
+
+// Token/coin component for skills
+const ArcadeToken = ({ skill, index }: { skill: string; index: number }) => {
+    const colors = ['#f472b6', '#a78bfa', '#67e8f9', '#a3e635', '#fbbf24', '#fb7185', '#818cf8', '#2dd4bf'];
+    const color = colors[index % colors.length];
+
+    return (
+        <motion.div
+            initial={{ rotateY: 180, opacity: 0 }}
+            whileInView={{ rotateY: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1, type: 'spring' }}
+            whileHover={{ scale: 1.1, rotateY: 15 }}
+            className="cursor-pointer perspective-1000"
+        >
+            <div className="w-20 h-20 rounded-full flex items-center justify-center relative"
+                style={{
+                    background: `radial-gradient(circle at 30% 30%, ${color}, ${color}99 70%, ${color}66)`,
+                    boxShadow: `0 4px 0 ${color}80, 0 0 20px ${color}40, inset 0 -4px 10px rgba(0,0,0,0.3), inset 0 4px 10px rgba(255,255,255,0.2)`,
+                    border: `3px solid ${color}`
+                }}>
+                {/* Inner ring */}
+                <div className="absolute inset-2 rounded-full border-2 border-white/20" />
+                {/* Star emblem */}
+                <Star className="w-6 h-6 text-white/90" fill="currentColor" />
+            </div>
+            <p className="text-center mt-2 text-sm font-bold text-white/90">{skill}</p>
+        </motion.div>
+    );
+};
+
+// Joystick decoration
+const JoystickDeco = ({ className }: { className?: string }) => (
+    <div className={`${className}`}>
+        <div className="w-12 h-12 rounded-full bg-gradient-to-b from-zinc-600 to-zinc-800 shadow-lg flex items-center justify-center">
+            <motion.div
+                className="w-6 h-16 rounded-full bg-gradient-to-b from-red-500 to-red-700 -mt-8"
+                style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.4)' }}
+                animate={{ rotate: [-5, 5, -5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+            />
+        </div>
+    </div>
 );
 
 export default function CandyPopPage({ data }: { data?: PortfolioData }) {
     const displayData = data || mockData;
 
-    const candyColors = ['#FF69B4', '#87CEEB', '#DDA0DD', '#98FB98', '#FFD700', '#FF6347', '#00CED1'];
-    const candyEmojis = ['🍬', '🍭', '🧁', '🍩', '🍪', '🎂', '🍫', '🍡', '🌈', '⭐'];
-
     return (
         <div className="min-h-screen overflow-hidden font-sans" style={{
-            background: 'linear-gradient(180deg, #fdf2f8 0%, #fce7f3 25%, #fbcfe8 50%, #f9a8d4 75%, #f472b6 100%)'
+            background: 'linear-gradient(180deg, #0f0d24 0%, #1e1b4b 50%, #2e1065 100%)'
         }}>
-            {/* Sprinkles background */}
+            {/* CRT scanlines */}
+            <ScanlineOverlay />
+
+            {/* Pixel stars background */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                {[...Array(50)].map((_, i) => (
-                    <Sprinkle
+                {[...Array(20)].map((_, i) => (
+                    <PixelStar
                         key={i}
-                        color={candyColors[i % candyColors.length]}
-                        top={`${Math.random() * 100}%`}
-                        left={`${Math.random() * 100}%`}
-                        rotate={Math.random() * 180}
+                        x={`${Math.random() * 100}%`}
+                        y={`${Math.random() * 100}%`}
+                        delay={i * 0.3}
+                        size={6 + Math.random() * 6}
                     />
                 ))}
             </div>
 
-            {/* Floating candies */}
+            {/* Neon accent lights */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                {candyEmojis.map((emoji, i) => (
-                    <FloatingCandy
-                        key={i}
-                        emoji={emoji}
-                        x={`${5 + i * 10}%`}
-                        y={`${10 + (i % 4) * 20}%`}
-                        delay={i * 0.5}
-                        size={30 + Math.random() * 20}
-                    />
-                ))}
+                <NeonTube color="#f472b6" className="absolute top-20 left-10 w-px h-32" />
+                <NeonTube color="#67e8f9" className="absolute top-40 right-16 w-px h-24" />
+                <NeonTube color="#a78bfa" className="absolute bottom-32 left-20 w-24 h-px" />
+                <NeonTube color="#fbbf24" className="absolute bottom-48 right-24 w-20 h-px" />
             </div>
 
-            {/* Navigation - Candy wrapper style */}
-            <nav className="fixed top-0 w-full z-50">
-                <div className="max-w-6xl mx-auto px-6 py-4">
-                    <motion.div
-                        initial={{ y: -50 }}
-                        animate={{ y: 0 }}
-                        className="bg-white/80 backdrop-blur-md rounded-full px-8 py-3 shadow-lg border-4 border-pink-300 inline-flex items-center gap-8 mx-auto"
-                        style={{ boxShadow: '0 8px 30px rgba(244,114,182,0.3)' }}
-                    >
-                        <div className="flex items-center gap-2">
-                            <span className="text-3xl">🍬</span>
-                            <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 text-xl">
-                                CANDY POP
-                            </span>
-                        </div>
-                        <div className="flex gap-6 text-sm font-bold">
-                            {['Sweet', 'Treats', 'Flavors', 'Order'].map((item, i) => (
-                                <a
-                                    key={item}
-                                    href={`#${item.toLowerCase()}`}
-                                    className="hover:scale-110 transition-transform"
-                                    style={{ color: candyColors[i] }}
+            {/* Navigation */}
+            <nav className="fixed top-0 w-full z-40 px-6 py-4">
+                <div className="max-w-5xl mx-auto">
+                    <ArcadeCard glowColor="#f472b6">
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <motion.div
+                                    animate={{ rotate: [0, 10, -10, 0] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
                                 >
-                                    {item}
-                                </a>
-                            ))}
+                                    <Gamepad2 className="w-8 h-8 text-pink-400" />
+                                </motion.div>
+                                <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400">
+                                    ARCADE
+                                </span>
+                                <div className="ml-4 flex gap-1">
+                                    {[...Array(3)].map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            className="w-2 h-2 rounded-full bg-green-400"
+                                            animate={{ opacity: [0.3, 1, 0.3] }}
+                                            transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="flex gap-6 text-sm font-bold">
+                                {['Start', 'Skills', 'Scores', 'Credits'].map((item, i) => (
+                                    <motion.a
+                                        key={item}
+                                        href={`#${item.toLowerCase()}`}
+                                        className="hover:text-pink-400 transition-colors"
+                                        style={{ color: ['#f472b6', '#a78bfa', '#67e8f9', '#fbbf24'][i] }}
+                                        whileHover={{ scale: 1.1 }}
+                                    >
+                                        {item}
+                                    </motion.a>
+                                ))}
+                            </div>
                         </div>
-                    </motion.div>
+                    </ArcadeCard>
                 </div>
             </nav>
 
-            {/* Hero - Giant gumball machine */}
+            {/* Hero - Claw machine inspired */}
             <section className="min-h-screen flex items-center justify-center px-6 pt-24 relative">
-                <div className="text-center max-w-4xl mx-auto">
-                    {/* Gumball machine frame */}
+                <div className="text-center max-w-4xl mx-auto relative z-10">
+                    {/* Claw machine frame */}
                     <motion.div
-                        initial={{ scale: 0, rotate: -10 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ type: "spring", bounce: 0.5 }}
-                        className="relative inline-block"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="relative w-72 h-80 mx-auto mb-12"
                     >
-                        {/* Glass dome with gumballs */}
-                        <div className="w-72 h-72 md:w-96 md:h-96 mx-auto rounded-full bg-white/30 backdrop-blur-sm border-8 border-white shadow-2xl relative overflow-hidden flex flex-wrap items-center justify-center content-center gap-2 p-8">
-                            {[...Array(20)].map((_, i) => (
-                                <motion.div
-                                    key={i}
-                                    className="w-12 h-12 rounded-full shadow-lg"
-                                    style={{ backgroundColor: candyColors[i % candyColors.length] }}
-                                    animate={{
-                                        y: [0, -5, 0],
-                                        scale: [1, 1.05, 1]
-                                    }}
-                                    transition={{
-                                        duration: 2,
-                                        delay: i * 0.1,
-                                        repeat: Infinity
-                                    }}
-                                />
-                            ))}
+                        {/* Machine frame */}
+                        <div className="absolute inset-0 rounded-xl border-4 border-purple-500/50 overflow-hidden"
+                            style={{
+                                background: 'linear-gradient(180deg, rgba(139,92,246,0.1) 0%, rgba(30,27,75,0.9) 100%)',
+                                boxShadow: '0 0 40px rgba(168,85,247,0.3), inset 0 0 60px rgba(0,0,0,0.5)'
+                            }}>
+                            {/* Top display */}
+                            <div className="absolute top-4 left-4 right-4 h-10 bg-black/50 rounded border border-purple-400/30 flex items-center justify-center">
+                                <motion.span
+                                    className="text-cyan-400 font-mono text-sm"
+                                    animate={{ opacity: [1, 0.5, 1] }}
+                                    transition={{ duration: 1, repeat: Infinity }}
+                                >
+                                    INSERT COIN ▶
+                                </motion.span>
+                            </div>
+
+                            {/* Claw */}
+                            <motion.div
+                                className="absolute top-16 left-1/2 -translate-x-1/2"
+                                animate={{ y: [0, 40, 0] }}
+                                transition={{ duration: 4, repeat: Infinity }}
+                            >
+                                <div className="w-1 h-20 bg-gradient-to-b from-zinc-400 to-zinc-600 mx-auto" />
+                                <div className="flex">
+                                    <motion.div
+                                        className="w-6 h-8 bg-gradient-to-b from-zinc-400 to-zinc-600 -rotate-12 origin-top"
+                                        animate={{ rotate: [-12, -25, -12] }}
+                                        transition={{ duration: 4, repeat: Infinity }}
+                                    />
+                                    <motion.div
+                                        className="w-6 h-8 bg-gradient-to-b from-zinc-400 to-zinc-600 rotate-12 origin-top -ml-2"
+                                        animate={{ rotate: [12, 25, 12] }}
+                                        transition={{ duration: 4, repeat: Infinity }}
+                                    />
+                                </div>
+                            </motion.div>
+
+                            {/* Prizes (floating circles) */}
+                            <div className="absolute bottom-4 left-4 right-4 h-24 flex items-end justify-center gap-2">
+                                {['#f472b6', '#a78bfa', '#67e8f9', '#fbbf24', '#a3e635'].map((color, i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="w-10 h-10 rounded-full"
+                                        style={{
+                                            background: `radial-gradient(circle at 30% 30%, ${color}, ${color}80)`,
+                                            boxShadow: `0 0 15px ${color}60`
+                                        }}
+                                        animate={{ y: [0, -5, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                                    />
+                                ))}
+                            </div>
                         </div>
-                        {/* Base */}
-                        <div className="w-24 h-8 mx-auto bg-gradient-to-b from-red-400 to-red-600 rounded-b-lg border-4 border-red-700" />
-                        <div className="w-16 h-16 mx-auto -mt-2 bg-gradient-to-b from-red-500 to-red-700 rounded-full flex items-center justify-center text-white font-black text-xs">
-                            TURN
-                        </div>
+
+                        {/* Side joysticks */}
+                        <JoystickDeco className="absolute -left-8 bottom-20" />
+                        <JoystickDeco className="absolute -right-8 bottom-20" />
                     </motion.div>
 
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-12"
+                        transition={{ delay: 0.3 }}
                     >
-                        <motion.p
-                            animate={{ scale: [1, 1.05, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="text-pink-600 font-bold tracking-widest uppercase mb-4"
-                        >
-                            ✨ {displayData.role} ✨
-                        </motion.p>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-pink-500/50 bg-pink-500/10 mb-6">
+                            <Zap className="w-4 h-4 text-yellow-400" />
+                            <span className="text-pink-300 font-bold text-sm uppercase tracking-wider">{displayData.role}</span>
+                        </div>
+
                         <h1 className="text-5xl md:text-7xl font-black mb-6">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400">
                                 {displayData.name}
                             </span>
                         </h1>
-                        <p className="text-lg text-pink-700/80 max-w-md mx-auto">
+
+                        <p className="text-lg text-purple-200/70 max-w-md mx-auto mb-10">
                             {displayData.bio}
                         </p>
-                    </motion.div>
-                </div>
-            </section>
 
-            {/* About - Candy wrapper card */}
-            <section id="sweet" className="py-32 px-6">
-                <div className="max-w-3xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, rotate: -3 }}
-                        whileInView={{ opacity: 1, rotate: 0 }}
-                        viewport={{ once: true }}
-                        className="relative"
-                    >
-                        {/* Wrapper twist ends */}
-                        <div className="absolute -left-8 top-1/2 -translate-y-1/2 w-16 h-32 bg-gradient-to-r from-pink-400 to-pink-300 rounded-l-full" style={{ clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 50%)' }} />
-                        <div className="absolute -right-8 top-1/2 -translate-y-1/2 w-16 h-32 bg-gradient-to-l from-cyan-400 to-cyan-300 rounded-r-full" style={{ clipPath: 'polygon(50% 0%, 0% 0%, 0% 100%, 50% 100%, 100% 50%)' }} />
-
-                        <div className="bg-gradient-to-r from-pink-200 via-purple-200 to-cyan-200 p-12 rounded-3xl shadow-xl relative z-10">
-                            <div className="flex items-center gap-4 mb-6">
-                                <span className="text-5xl">🧁</span>
-                                <h2 className="text-3xl font-black text-pink-600">About Me</h2>
-                            </div>
-                            <p className="text-pink-800 leading-relaxed text-lg">
-                                Just like the perfect piece of candy, I believe great design should be colorful,
-                                joyful, and leave people wanting more. I specialize in creating experiences that
-                                bring smiles and delight users at every interaction. Currently spreading sweetness
-                                from {displayData.location}! 🌈
-                            </p>
+                        <div className="flex justify-center gap-4">
+                            <ArcadeButton color="#ec4899">
+                                <span className="text-white">Start Game</span>
+                            </ArcadeButton>
+                            <ArcadeButton color="#8b5cf6">
+                                <span className="text-white">High Scores</span>
+                            </ArcadeButton>
                         </div>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Skills - Jawbreaker layers */}
-            <section id="flavors" className="py-32 px-6">
+            {/* About */}
+            <section id="start" className="py-32 px-6 relative z-10">
+                <div className="max-w-3xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <ArcadeCard glowColor="#a78bfa">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                                    <Trophy className="w-6 h-6 text-white" />
+                                </div>
+                                <h2 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
+                                    Player Profile
+                                </h2>
+                            </div>
+                            <p className="text-purple-200/70 leading-relaxed">
+                                Like a perfectly designed game UI, I believe interfaces should be intuitive,
+                                rewarding, and visually exciting. Every button press should feel satisfying,
+                                every transition should feel smooth. I bring the joy of gaming to every project,
+                                creating experiences that users want to engage with again and again.
+                                Currently leveling up from {displayData.location}.
+                            </p>
+                            {/* Stats bar */}
+                            <div className="mt-6 flex gap-4">
+                                {[
+                                    { label: 'LVL', value: '42' },
+                                    { label: 'XP', value: '9,999' },
+                                    { label: 'RANK', value: 'S+' }
+                                ].map((stat) => (
+                                    <div key={stat.label} className="px-4 py-2 bg-black/30 rounded border border-purple-500/30">
+                                        <div className="text-xs text-purple-400">{stat.label}</div>
+                                        <div className="text-xl font-bold text-cyan-400">{stat.value}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </ArcadeCard>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Skills - Arcade tokens */}
+            <section id="skills" className="py-32 px-6 relative z-10">
                 <div className="max-w-4xl mx-auto text-center">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-black text-pink-600 mb-4"
+                        className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400 mb-4"
                     >
-                        Flavor Stack 🍭
+                        Power-Ups
                     </motion.h2>
-                    <p className="text-pink-500 mb-16">Every layer is delicious!</p>
+                    <p className="text-purple-400 mb-16">Collect them all!</p>
 
-                    {/* Jawbreaker visualization */}
-                    <div className="flex flex-wrap justify-center gap-6">
+                    <div className="flex flex-wrap justify-center gap-8">
                         {displayData.skills.map((skill, i) => (
-                            <motion.div
-                                key={skill}
-                                initial={{ scale: 0, rotate: 180 }}
-                                whileInView={{ scale: 1, rotate: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1, type: "spring" }}
-                                whileHover={{ scale: 1.2, rotate: 10 }}
-                                className="relative cursor-pointer"
-                            >
-                                {/* Jawbreaker with layers */}
-                                <div
-                                    className="w-24 h-24 rounded-full flex items-center justify-center shadow-xl font-bold text-white text-sm text-center p-2"
-                                    style={{
-                                        background: `radial-gradient(circle, 
-                                            ${candyColors[(i + 2) % candyColors.length]} 0%, 
-                                            ${candyColors[(i + 1) % candyColors.length]} 30%, 
-                                            ${candyColors[i % candyColors.length]} 60%, 
-                                            ${candyColors[(i + 3) % candyColors.length]} 100%
-                                        )`,
-                                        boxShadow: `0 10px 30px ${candyColors[i % candyColors.length]}50`
-                                    }}
-                                >
-                                    {skill}
-                                </div>
-                            </motion.div>
+                            <ArcadeToken key={skill} skill={skill} index={i} />
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Projects - Cupcake cards */}
-            <section id="treats" className="py-32 px-6">
+            {/* Projects - Trading cards */}
+            <section id="scores" className="py-32 px-6 relative z-10">
                 <div className="max-w-5xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-black text-center text-pink-600 mb-16"
+                        className="text-3xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-16"
                     >
-                        Sweet Treats 🧁
+                        High Scores
                     </motion.h2>
-                    <div className="grid md:grid-cols-2 gap-12">
+                    <div className="grid md:grid-cols-2 gap-8">
                         {displayData.projects.map((project, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 50 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                whileHover={{ y: -10, rotate: i % 2 === 0 ? 2 : -2 }}
-                                className={`group relative ${project.url || project.github ? 'cursor-pointer' : ''}`}
+                                whileHover={{ y: -10, rotateY: 5 }}
+                                className={`perspective-1000 ${project.url || project.github ? 'cursor-pointer' : ''}`}
                                 onClick={() => {
                                     const url = project.url || project.github;
                                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
                                 }}
                             >
-                                {/* Cupcake wrapper */}
-                                <div
-                                    className="h-24 rounded-b-3xl"
-                                    style={{
-                                        background: `repeating-linear-gradient(
-                                            90deg,
-                                            ${candyColors[i % candyColors.length]},
-                                            ${candyColors[i % candyColors.length]} 10px,
-                                            ${candyColors[(i + 2) % candyColors.length]} 10px,
-                                            ${candyColors[(i + 2) % candyColors.length]} 20px
-                                        )`
-                                    }}
-                                />
-                                {/* Frosting */}
-                                <div
-                                    className="bg-gradient-to-br from-pink-200 via-purple-200 to-pink-300 p-8 rounded-t-[3rem] -mt-4 relative shadow-xl"
-                                    style={{
-                                        clipPath: 'polygon(0 20%, 10% 0, 20% 15%, 30% 0, 40% 15%, 50% 0, 60% 15%, 70% 0, 80% 15%, 90% 0, 100% 20%, 100% 100%, 0 100%)'
-                                    }}
-                                >
-                                    {/* Cherry on top */}
-                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-4xl">🍒</div>
-
-                                    <h3 className="text-2xl font-black text-pink-600 mb-3 mt-4 group-hover:text-purple-600 transition-colors">
+                                <ArcadeCard glowColor={i === 0 ? '#f472b6' : '#67e8f9'}>
+                                    {/* Holographic top strip */}
+                                    <div className="h-2 -mx-6 -mt-6 mb-4 rounded-t"
+                                        style={{
+                                            background: `linear-gradient(90deg, ${i === 0 ? '#f472b6' : '#67e8f9'}, #a78bfa, ${i === 0 ? '#67e8f9' : '#f472b6'})`,
+                                            animation: 'holo 3s linear infinite'
+                                        }}
+                                    />
+                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">
                                         {project.name}
                                     </h3>
-                                    <p className="text-pink-700/80 mb-4">{project.description}</p>
+                                    <p className="text-purple-300/60 mb-4">{project.description}</p>
                                     <div className="flex flex-wrap gap-2">
                                         {project.technologies?.map((tech, j) => (
-                                            <span
-                                                key={tech}
-                                                className="px-3 py-1 rounded-full text-white text-sm font-bold"
-                                                style={{ backgroundColor: candyColors[(i + j) % candyColors.length] }}
-                                            >
+                                            <span key={tech} className="px-3 py-1 rounded-full text-xs font-bold"
+                                                style={{
+                                                    background: ['#f472b620', '#a78bfa20', '#67e8f920', '#fbbf2420'][j % 4],
+                                                    color: ['#f472b6', '#a78bfa', '#67e8f9', '#fbbf24'][j % 4],
+                                                    border: `1px solid ${['#f472b6', '#a78bfa', '#67e8f9', '#fbbf24'][j % 4]}50`
+                                                }}>
                                                 {tech}
                                             </span>
                                         ))}
                                     </div>
-                                </div>
+                                </ArcadeCard>
                             </motion.div>
                         ))}
                     </div>
@@ -327,15 +458,15 @@ export default function CandyPopPage({ data }: { data?: PortfolioData }) {
             </section>
 
             {/* Experience */}
-            <section className="py-32 px-6">
+            <section className="py-32 px-6 relative z-10">
                 <div className="max-w-4xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-black text-center text-pink-600 mb-16"
+                        className="text-3xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 mb-16"
                     >
-                        Sweet Journey 🌈
+                        Quest Log
                     </motion.h2>
                     {displayData.experience.map((exp, i) => (
                         <motion.div
@@ -343,51 +474,49 @@ export default function CandyPopPage({ data }: { data?: PortfolioData }) {
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            className="relative pl-12 pb-8"
                         >
-                            {/* Lollipop timeline */}
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-pink-400 via-purple-400 to-cyan-400" />
-                            <div className="absolute left-0 top-2 -translate-x-[10px] w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 flex items-center justify-center">
-                                <Star className="w-3 h-3 text-white" />
-                            </div>
-
-                            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border-2 border-pink-200">
+                            <ArcadeCard glowColor="#a78bfa">
                                 <div className="flex justify-between items-start flex-wrap gap-2 mb-2">
-                                    <h3 className="text-xl font-bold text-pink-600">{exp.position}</h3>
-                                    <span className="px-3 py-1 bg-pink-100 text-pink-500 rounded-full text-sm">{exp.startDate} - {exp.endDate}</span>
+                                    <h3 className="text-xl font-bold text-pink-400">{exp.position}</h3>
+                                    <span className="px-3 py-1 bg-purple-500/20 border border-purple-400/30 rounded-full text-purple-300 text-sm">
+                                        {exp.startDate} — {exp.endDate}
+                                    </span>
                                 </div>
-                                <p className="text-purple-600 mb-2">{exp.company}</p>
-                                <p className="text-pink-700/70">{exp.description}</p>
-                            </div>
+                                <p className="text-cyan-400 mb-2">{exp.company}</p>
+                                <p className="text-purple-200/60">{exp.description}</p>
+                            </ArcadeCard>
                         </motion.div>
                     ))}
                 </div>
             </section>
 
             {/* Education */}
-            <section className="py-32 px-6">
+            <section className="py-32 px-6 relative z-10">
                 <div className="max-w-4xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-black text-center text-pink-600 mb-16"
+                        className="text-3xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-400 mb-16"
                     >
-                        Learning Sweets 📚
+                        Training Mode
                     </motion.h2>
                     <div className="grid md:grid-cols-2 gap-6">
                         {displayData.education.map((edu, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border-2 border-pink-200"
                             >
-                                <span className="text-3xl mb-4 block">🎓</span>
-                                <h3 className="text-lg font-bold text-pink-600">{edu.degree}</h3>
-                                <p className="text-purple-600">{edu.school}</p>
-                                <p className="text-sm text-pink-400">{edu.startDate} - {edu.endDate}</p>
+                                <ArcadeCard glowColor="#67e8f9">
+                                    <div className="w-10 h-10 rounded bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center mb-4">
+                                        <span className="text-lg">🎮</span>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-cyan-400 mb-1">{edu.degree}</h3>
+                                    <p className="text-purple-400">{edu.school}</p>
+                                    <p className="text-sm text-purple-300/50">{edu.startDate} — {edu.endDate}</p>
+                                </ArcadeCard>
                             </motion.div>
                         ))}
                     </div>
@@ -395,46 +524,61 @@ export default function CandyPopPage({ data }: { data?: PortfolioData }) {
             </section>
 
             {/* Contact */}
-            <section id="order" className="py-32 px-6">
+            <section id="credits" className="py-32 px-6 relative z-10">
                 <div className="max-w-2xl mx-auto text-center">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <motion.div
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="text-7xl mb-8"
-                        >
-                            🍭
-                        </motion.div>
-                        <h2 className="text-4xl font-black text-pink-600 mb-6">Order a Sweet! 💌</h2>
-                        <p className="text-pink-700/80 mb-12">
-                            Ready to add some sugar to your project?
-                        </p>
-                        <div className="flex justify-center gap-6">
-                            {[
-                                { icon: Mail, href: `mailto:${displayData.email}`, color: '#FF69B4' },
-                                { icon: Github, href: displayData.links.github, color: '#87CEEB' },
-                                { icon: Linkedin, href: displayData.links.linkedin, color: '#DDA0DD' }
-                            ].map(({ icon: Icon, href, color }, i) => (
-                                <motion.a
-                                    key={i}
-                                    href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    whileHover={{ scale: 1.2, rotate: 10 }}
-                                    className="p-4 rounded-full shadow-xl"
-                                    style={{ backgroundColor: color }}
-                                >
-                                    <Icon className="w-6 h-6 text-white" />
-                                </motion.a>
-                            ))}
-                        </div>
+                        <ArcadeCard glowColor="#f472b6">
+                            <motion.div
+                                animate={{ scale: [1, 1.1, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
+                                <Gamepad2 className="w-16 h-16 mx-auto mb-6 text-pink-400" />
+                            </motion.div>
+                            <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400 mb-4">
+                                Insert Coin
+                            </h2>
+                            <p className="text-purple-200/60 mb-8">
+                                Ready to start a new game together?
+                            </p>
+                            <div className="flex justify-center gap-4">
+                                {[
+                                    { icon: Mail, href: `mailto:${displayData.email}`, color: '#f472b6' },
+                                    { icon: Github, href: displayData.links.github, color: '#a78bfa' },
+                                    { icon: Linkedin, href: displayData.links.linkedin, color: '#67e8f9' }
+                                ].map(({ icon: Icon, href, color }, i) => (
+                                    <motion.a
+                                        key={i}
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        whileHover={{ scale: 1.2, rotate: 5 }}
+                                        className="p-4 rounded-xl"
+                                        style={{
+                                            background: `${color}20`,
+                                            border: `2px solid ${color}50`,
+                                            boxShadow: `0 0 20px ${color}30`
+                                        }}
+                                    >
+                                        <Icon className="w-6 h-6" style={{ color }} />
+                                    </motion.a>
+                                ))}
+                            </div>
+                        </ArcadeCard>
                     </motion.div>
                 </div>
             </section>
+
+            {/* CSS for holographic animation */}
+            <style jsx>{`
+                @keyframes holo {
+                    0% { background-position: 0% 50%; }
+                    100% { background-position: 200% 50%; }
+                }
+            `}</style>
         </div>
     );
 }

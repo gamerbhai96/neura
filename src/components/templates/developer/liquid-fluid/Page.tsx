@@ -1,394 +1,490 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Github, Linkedin, Droplets, Waves, Beaker, FlaskConical } from 'lucide-react';
+import { Mail, Github, Linkedin, Waves, Anchor, Compass, Fish } from 'lucide-react';
 import { PortfolioData } from '../../types';
 
 const mockData: PortfolioData = {
-    name: "Fluid Dev",
-    role: "Creative Engineer",
-    email: "dev@liquid.io",
+    name: "Deep Dev",
+    role: "Systems Diver",
+    email: "dev@abyss.io",
     phone: "+1 555 000 0000",
-    location: "Flow State",
-    bio: "Creating interfaces that flow like water. Smooth, natural, unstoppable.",
-    skills: ["React", "Animation", "WebGL", "Three.js", "GSAP", "Framer Motion", "CSS", "Canvas"],
-    experience: [{ company: "Flow Labs", position: "Motion Engineer", startDate: "2020", endDate: "Present", description: "Building fluid experiences", highlights: [] }],
+    location: "The Marianas",
+    bio: "Exploring the depths of complex systems. Where others see darkness, I find bioluminescent solutions.",
+    skills: ["Rust", "Go", "Kubernetes", "PostgreSQL", "Redis", "GraphQL", "Docker", "AWS"],
+    experience: [{ company: "Abyssal Labs", position: "Principal Architect", startDate: "2020", endDate: "Present", description: "Diving deep into distributed systems", highlights: [] }],
     education: [
-        { school: "Motion University", degree: "BA Interactive Design", field: "Design", startDate: "2016", endDate: "2020" }
+        { school: "Ocean Tech University", degree: "MS Distributed Systems", field: "Computer Science", startDate: "2016", endDate: "2020" }
     ],
     projects: [
-        { name: "Ripple", description: "Fluid interaction library", technologies: ["WebGL", "GLSL"] },
-        { name: "Stream", description: "Real-time data flow viz", technologies: ["D3", "Canvas"] }
+        { name: "Leviathan", description: "High-scale message broker", technologies: ["Rust", "Tokio"] },
+        { name: "Kraken", description: "Distributed task orchestrator", technologies: ["Go", "gRPC"] }
     ],
     links: { github: "https://github.com", linkedin: "https://linkedin.com" }
 };
 
-// Oil/lava lamp blob
-const LiquidBlob = ({ color, size, x, y, speed }: {
-    color: string; size: number; x: string; y: string; speed: number
+// Bioluminescent jellyfish
+const Jellyfish = ({ x, y, size, color, delay }: {
+    x: string; y: string; size: number; color: string; delay: number
 }) => (
     <motion.div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-            width: size,
-            height: size,
-            left: x,
-            top: y,
-            background: color,
-            filter: 'blur(2px)'
-        }}
+        className="absolute pointer-events-none"
+        style={{ left: x, top: y }}
         animate={{
             y: [0, -100, 0],
-            scale: [1, 1.3, 0.8, 1.1, 1],
-            borderRadius: ['50%', '40% 60% 60% 40%', '60% 40% 40% 60%', '50%']
+            x: [0, 20, -20, 0]
         }}
-        transition={{
-            duration: speed,
-            repeat: Infinity,
-            ease: "easeInOut"
-        }}
-    />
-);
-
-// Bubble rising effect
-const Bubble = ({ delay, x }: { delay: number; x: string }) => (
-    <motion.div
-        className="absolute bottom-0 rounded-full pointer-events-none"
-        style={{
-            left: x,
-            width: 10 + Math.random() * 20,
-            height: 10 + Math.random() * 20,
-            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(255,255,255,0.1))',
-            border: '1px solid rgba(255,255,255,0.2)'
-        }}
-        animate={{
-            y: [0, '-100vh'],
-            x: [0, Math.sin(delay) * 30, 0],
-            scale: [0.5, 1, 0.8, 1]
-        }}
-        transition={{
-            duration: 6 + Math.random() * 4,
-            repeat: Infinity,
-            delay,
-            ease: "easeOut"
-        }}
-    />
-);
-
-// Metaball SVG filter
-const MetaballFilter = () => (
-    <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-        <defs>
-            <filter id="goo">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
-            </filter>
-        </defs>
-    </svg>
-);
-
-// Liquid container
-const LiquidTank = ({ children, fillColor, level }: {
-    children: React.ReactNode; fillColor: string; level: string
-}) => (
-    <div className="relative rounded-3xl overflow-hidden border-4 border-white/10"
-        style={{ background: 'rgba(0,0,0,0.3)' }}>
-        {/* Liquid fill */}
+        transition={{ duration: 20 + delay * 5, repeat: Infinity, delay }}
+    >
+        {/* Bell */}
         <motion.div
-            className="absolute bottom-0 left-0 right-0"
+            className="rounded-t-full relative"
             style={{
-                height: level,
-                background: fillColor,
+                width: size,
+                height: size * 0.7,
+                background: `radial-gradient(ellipse at 50% 30%, ${color}80, ${color}40, transparent)`,
+                boxShadow: `0 0 ${size / 2}px ${color}60, inset 0 0 ${size / 3}px ${color}40`
             }}
             animate={{
-                height: [level, `calc(${level} + 2%)`, level]
+                scaleX: [1, 1.1, 0.9, 1],
+                scaleY: [1, 0.9, 1.1, 1]
             }}
             transition={{ duration: 3, repeat: Infinity }}
         >
-            {/* Wave surface */}
-            <svg className="absolute top-0 left-0 w-full h-8 -translate-y-1/2" viewBox="0 0 1200 50" preserveAspectRatio="none">
-                <motion.path
-                    d="M0,25 Q150,50 300,25 T600,25 T900,25 T1200,25 L1200,50 L0,50 Z"
-                    fill={fillColor}
-                    animate={{
-                        d: [
-                            "M0,25 Q150,50 300,25 T600,25 T900,25 T1200,25 L1200,50 L0,50 Z",
-                            "M0,25 Q150,0 300,25 T600,25 T900,25 T1200,25 L1200,50 L0,50 Z"
-                        ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-                />
-            </svg>
+            {/* Glow core */}
+            <motion.div
+                className="absolute top-1/3 left-1/2 -translate-x-1/2 w-1/3 h-1/3 rounded-full"
+                style={{ background: color, filter: `blur(${size / 10}px)` }}
+                animate={{ opacity: [0.4, 0.8, 0.4] }}
+                transition={{ duration: 2, repeat: Infinity }}
+            />
         </motion.div>
-        <div className="relative z-10">{children}</div>
+        {/* Tentacles */}
+        <div className="flex justify-center gap-1">
+            {[...Array(5)].map((_, i) => (
+                <motion.div
+                    key={i}
+                    className="w-px rounded-full"
+                    style={{
+                        height: size * (0.8 + Math.random() * 0.4),
+                        background: `linear-gradient(180deg, ${color}60, transparent)`,
+                    }}
+                    animate={{
+                        scaleY: [1, 1.1, 0.9, 1],
+                        x: [0, (i - 2) * 3, 0]
+                    }}
+                    transition={{ duration: 2 + i * 0.3, repeat: Infinity }}
+                />
+            ))}
+        </div>
+    </motion.div>
+);
+
+// Deep sea anglerfish silhouette
+const AnglerSilhouette = ({ x, size }: { x: string; size: number }) => (
+    <motion.div
+        className="absolute pointer-events-none opacity-20"
+        style={{ left: x, bottom: '10%' }}
+        animate={{ x: [0, 50, 0] }}
+        transition={{ duration: 30, repeat: Infinity }}
+    >
+        <svg width={size} height={size * 0.6} viewBox="0 0 100 60" fill="none">
+            <path
+                d="M10,30 Q30,10 50,30 Q70,50 90,30 Q95,30 95,35 Q90,40 70,35 Q50,50 30,40 Q10,45 10,30"
+                fill="currentColor"
+                className="text-cyan-300"
+            />
+            {/* Lure */}
+            <motion.circle
+                cx="95" cy="20" r="4"
+                fill="#22d3ee"
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+            />
+            <line x1="85" y1="25" x2="95" y2="20" stroke="#22d3ee" strokeWidth="0.5" opacity="0.5" />
+        </svg>
+    </motion.div>
+);
+
+// Caustic light pattern
+const CausticLight = () => (
+    <div className="fixed inset-0 pointer-events-none opacity-10">
+        <motion.div
+            className="absolute inset-0"
+            style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                filter: 'blur(20px) contrast(2)'
+            }}
+            animate={{
+                backgroundPosition: ['0% 0%', '100% 100%'],
+                opacity: [0.1, 0.2, 0.1]
+            }}
+            transition={{ duration: 20, repeat: Infinity }}
+        />
     </div>
 );
 
-// Drip animation
-const Drip = ({ color, x, delay }: { color: string; x: string; delay: number }) => (
-    <motion.div
-        className="absolute top-0 pointer-events-none"
-        style={{ left: x }}
-        initial={{ y: 0, scaleY: 1 }}
-        animate={{
-            y: [0, 20, 100],
-            scaleY: [1, 1.5, 0.5],
-            opacity: [1, 1, 0]
-        }}
-        transition={{
-            duration: 2,
-            repeat: Infinity,
-            delay,
-            repeatDelay: 3
-        }}
-    >
-        <div
-            className="w-3 h-8 rounded-full"
-            style={{ background: color }}
-        />
-    </motion.div>
+// Bubble particles
+const BubbleField = () => (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {[...Array(20)].map((_, i) => (
+            <motion.div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                    left: `${Math.random() * 100}%`,
+                    bottom: '-20px',
+                    width: 4 + Math.random() * 8,
+                    height: 4 + Math.random() * 8,
+                    background: 'radial-gradient(circle at 30% 30%, rgba(34,211,238,0.4), rgba(34,211,238,0.1))',
+                    border: '1px solid rgba(34,211,238,0.2)'
+                }}
+                animate={{
+                    y: [0, '-100vh'],
+                    x: [0, Math.sin(i) * 50, 0],
+                    opacity: [0, 0.6, 0]
+                }}
+                transition={{
+                    duration: 10 + Math.random() * 10,
+                    repeat: Infinity,
+                    delay: i * 0.5
+                }}
+            />
+        ))}
+    </div>
 );
+
+// Pressure depth indicator
+const DepthMeter = () => (
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden md:block">
+        <div className="flex flex-col items-center gap-2">
+            <span className="text-xs text-cyan-400/50 uppercase tracking-wider">Depth</span>
+            <div className="w-1 h-48 bg-slate-800 rounded-full relative overflow-hidden">
+                <motion.div
+                    className="absolute bottom-0 w-full rounded-full"
+                    style={{ background: 'linear-gradient(0deg, #22d3ee, #06b6d4, #0891b2)' }}
+                    animate={{ height: ['30%', '70%', '30%'] }}
+                    transition={{ duration: 10, repeat: Infinity }}
+                />
+            </div>
+            <motion.span
+                className="text-sm font-mono text-cyan-400"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+            >
+                3.7km
+            </motion.span>
+        </div>
+    </div>
+);
+
+// Submarine porthole frame
+const PortholeCard = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+    <div className={`relative ${className}`}>
+        {/* Outer ring (metallic frame) */}
+        <div className="absolute -inset-3 rounded-2xl"
+            style={{
+                background: 'linear-gradient(145deg, #334155, #1e293b)',
+                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.05), 0 10px 40px rgba(0,0,0,0.5)'
+            }}>
+            {/* Rivets */}
+            {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="absolute w-2 h-2 rounded-full bg-gradient-to-br from-slate-400 to-slate-600"
+                    style={{
+                        top: i < 2 ? '8px' : 'auto',
+                        bottom: i >= 2 ? '8px' : 'auto',
+                        left: i % 2 === 0 ? '8px' : 'auto',
+                        right: i % 2 === 1 ? '8px' : 'auto'
+                    }}
+                />
+            ))}
+        </div>
+        {/* Glass content area */}
+        <div className="relative rounded-xl overflow-hidden"
+            style={{
+                background: 'linear-gradient(180deg, rgba(8,145,178,0.1), rgba(6,95,124,0.2))',
+                boxShadow: 'inset 0 0 30px rgba(34,211,238,0.1)'
+            }}>
+            {/* Glass reflection */}
+            <div className="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+            <div className="p-6 relative z-10">{children}</div>
+        </div>
+    </div>
+);
+
+// Glowing organism for skills
+const GlowOrganism = ({ skill, index }: { skill: string; index: number }) => {
+    const colors = ['#22d3ee', '#a855f7', '#ec4899', '#14b8a6', '#f472b6', '#06b6d4', '#8b5cf6', '#10b981'];
+    const color = colors[index % colors.length];
+
+    return (
+        <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ scale: 1.1 }}
+            className="cursor-pointer text-center"
+        >
+            <motion.div
+                className="w-20 h-20 mx-auto mb-3 rounded-full flex items-center justify-center relative"
+                style={{
+                    background: `radial-gradient(circle at 40% 40%, ${color}40, ${color}10, transparent)`,
+                    boxShadow: `0 0 30px ${color}40, inset 0 0 20px ${color}20`
+                }}
+                animate={{
+                    boxShadow: [
+                        `0 0 30px ${color}40, inset 0 0 20px ${color}20`,
+                        `0 0 50px ${color}60, inset 0 0 30px ${color}30`,
+                        `0 0 30px ${color}40, inset 0 0 20px ${color}20`
+                    ]
+                }}
+                transition={{ duration: 3, repeat: Infinity, delay: index * 0.2 }}
+            >
+                {/* Pulsing core */}
+                <motion.div
+                    className="w-8 h-8 rounded-full"
+                    style={{ background: color, filter: 'blur(4px)' }}
+                    animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 0.8, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                />
+            </motion.div>
+            <span className="text-sm font-medium text-cyan-200/80">{skill}</span>
+        </motion.div>
+    );
+};
 
 export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
     const displayData = data || mockData;
 
     return (
         <div className="min-h-screen text-white font-sans overflow-hidden relative" style={{
-            background: 'linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2a 100%)'
+            background: 'linear-gradient(180deg, #0c1929 0%, #0a1628 30%, #061224 60%, #020617 100%)'
         }}>
-            {/* Metaball filter */}
-            <MetaballFilter />
+            {/* Caustic light patterns */}
+            <CausticLight />
 
-            {/* Large liquid blobs in background */}
-            <div className="fixed inset-0 pointer-events-none" style={{ filter: 'url(#goo)' }}>
-                <LiquidBlob color="rgba(59, 130, 246, 0.4)" size={300} x="5%" y="10%" speed={12} />
-                <LiquidBlob color="rgba(168, 85, 247, 0.4)" size={250} x="70%" y="20%" speed={15} />
-                <LiquidBlob color="rgba(236, 72, 153, 0.4)" size={200} x="30%" y="60%" speed={10} />
-                <LiquidBlob color="rgba(34, 211, 238, 0.4)" size={280} x="80%" y="50%" speed={14} />
-            </div>
+            {/* Bubble field */}
+            <BubbleField />
 
-            {/* Rising bubbles */}
+            {/* Jellyfish */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                {[...Array(15)].map((_, i) => (
-                    <Bubble key={i} delay={i * 0.5} x={`${Math.random() * 100}%`} />
-                ))}
+                <Jellyfish x="10%" y="20%" size={60} color="#22d3ee" delay={0} />
+                <Jellyfish x="80%" y="30%" size={45} color="#a855f7" delay={3} />
+                <Jellyfish x="25%" y="60%" size={50} color="#ec4899" delay={1.5} />
+                <Jellyfish x="70%" y="70%" size={40} color="#14b8a6" delay={4} />
             </div>
 
-            {/* Dripping effect from top */}
-            <div className="fixed top-0 left-0 right-0 pointer-events-none">
-                <Drip color="rgba(59, 130, 246, 0.8)" x="15%" delay={0} />
-                <Drip color="rgba(168, 85, 247, 0.8)" x="45%" delay={1.5} />
-                <Drip color="rgba(236, 72, 153, 0.8)" x="75%" delay={3} />
-            </div>
+            {/* Anglerfish silhouettes */}
+            <AnglerSilhouette x="5%" size={120} />
+            <AnglerSilhouette x="75%" size={80} />
+
+            {/* Depth meter */}
+            <DepthMeter />
 
             {/* Navigation */}
             <nav className="fixed top-0 w-full z-50 px-6 py-4">
                 <div className="max-w-5xl mx-auto">
-                    <LiquidTank fillColor="rgba(59, 130, 246, 0.3)" level="100%">
-                        <div className="px-8 py-4">
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-3">
-                                    <motion.div
-                                        animate={{ rotate: [0, 360] }}
-                                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                                    >
-                                        <Droplets className="w-8 h-8 text-blue-400" />
-                                    </motion.div>
-                                    <span className="text-2xl font-bold tracking-wider text-blue-300">LIQUID</span>
-                                </div>
-                                <div className="flex gap-8 text-sm font-medium text-white/60">
-                                    {['Flow', 'Mix', 'Pour', 'Fill'].map((item) => (
-                                        <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-blue-400 transition-colors">
-                                            {item}
-                                        </a>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </LiquidTank>
-                </div>
-            </nav>
-
-            {/* Hero - Beaker/flask style */}
-            <section className="min-h-screen flex items-center justify-center px-6 pt-24 pb-20 relative z-10">
-                <div className="max-w-4xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center"
-                    >
-                        {/* Flask decoration */}
-                        <motion.div
-                            className="w-40 h-56 mx-auto mb-12 relative"
-                            animate={{ y: [0, -10, 0] }}
-                            transition={{ duration: 4, repeat: Infinity }}
-                        >
-                            {/* Flask body */}
-                            <div className="absolute bottom-0 w-full h-40 rounded-b-full bg-white/5 border-2 border-white/20 overflow-hidden">
-                                {/* Liquid fill */}
+                    <PortholeCard>
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-3">
                                 <motion.div
-                                    className="absolute bottom-0 left-0 right-0"
-                                    style={{
-                                        height: '60%',
-                                        background: 'linear-gradient(0deg, #3b82f6, #a855f7)'
-                                    }}
-                                    animate={{ height: ['55%', '65%', '55%'] }}
-                                    transition={{ duration: 3, repeat: Infinity }}
+                                    animate={{ rotate: [0, 360] }}
+                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                                 >
-                                    {/* Bubbles in liquid */}
-                                    {[...Array(5)].map((_, i) => (
+                                    <Compass className="w-8 h-8 text-cyan-400" />
+                                </motion.div>
+                                <span className="text-2xl font-bold tracking-wider text-cyan-300">ABYSS</span>
+                                <div className="w-px h-6 bg-cyan-500/30 mx-2" />
+                                <div className="flex gap-1">
+                                    {[...Array(3)].map((_, i) => (
                                         <motion.div
                                             key={i}
-                                            className="absolute w-2 h-2 rounded-full bg-white/30"
-                                            style={{ left: `${20 + i * 15}%`, bottom: '10%' }}
-                                            animate={{ y: [0, -40], opacity: [1, 0] }}
+                                            className="w-1.5 h-1.5 rounded-full bg-cyan-400"
+                                            animate={{ opacity: [0.3, 1, 0.3] }}
                                             transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }}
                                         />
                                     ))}
-                                </motion.div>
+                                </div>
                             </div>
-                            {/* Flask neck */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-20 bg-white/5 border-2 border-white/20 border-b-0 rounded-t-lg" />
-                        </motion.div>
+                            <div className="flex gap-8 text-sm font-medium text-cyan-300/60">
+                                {['Dive', 'Explore', 'Discover', 'Surface'].map((item) => (
+                                    <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-cyan-300 transition-colors">
+                                        {item}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </PortholeCard>
+                </div>
+            </nav>
 
+            {/* Hero */}
+            <section className="min-h-screen flex items-center justify-center px-6 pt-24 pb-20 relative z-10">
+                <div className="max-w-4xl mx-auto text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        {/* Submarine silhouette */}
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500/20 rounded-full border border-blue-400/30 mb-8"
+                            className="w-64 h-32 mx-auto mb-12 relative"
+                            animate={{ y: [0, -15, 0] }}
+                            transition={{ duration: 6, repeat: Infinity }}
                         >
-                            <Beaker className="w-5 h-5 text-blue-400" />
-                            <span className="text-blue-300">{displayData.role}</span>
+                            <svg viewBox="0 0 200 80" className="w-full h-full">
+                                {/* Sub body */}
+                                <ellipse cx="100" cy="40" rx="80" ry="25" fill="url(#subGradient)" />
+                                {/* Conning tower */}
+                                <rect x="80" y="15" width="30" height="25" rx="5" fill="url(#subGradient)" />
+                                {/* Periscope */}
+                                <rect x="92" y="5" width="6" height="15" fill="#334155" />
+                                {/* Porthole */}
+                                <circle cx="60" cy="40" r="8" fill="#0c1929" stroke="#22d3ee" strokeWidth="2" />
+                                <circle cx="100" cy="40" r="8" fill="#0c1929" stroke="#22d3ee" strokeWidth="2" />
+                                <circle cx="140" cy="40" r="8" fill="#0c1929" stroke="#22d3ee" strokeWidth="2" />
+                                {/* Lights */}
+                                <motion.circle
+                                    cx="180" cy="40" r="4"
+                                    fill="#22d3ee"
+                                    animate={{ opacity: [0.5, 1, 0.5] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                />
+                                <defs>
+                                    <linearGradient id="subGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stopColor="#475569" />
+                                        <stop offset="100%" stopColor="#1e293b" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            {/* Light beam */}
+                            <motion.div
+                                className="absolute right-0 top-1/2 w-32 h-16 -translate-y-1/2"
+                                style={{
+                                    background: 'linear-gradient(90deg, rgba(34,211,238,0.3), transparent)',
+                                    clipPath: 'polygon(0 40%, 100% 0, 100% 100%, 0 60%)'
+                                }}
+                                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                            />
                         </motion.div>
 
-                        <h1
-                            className="text-6xl md:text-8xl font-black mb-6 text-transparent bg-clip-text"
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 mb-6">
+                            <Anchor className="w-4 h-4 text-cyan-400" />
+                            <span className="text-cyan-300/80 text-sm">{displayData.role}</span>
+                        </div>
+
+                        <h1 className="text-6xl md:text-8xl font-black mb-6 text-transparent bg-clip-text"
                             style={{
-                                backgroundImage: 'linear-gradient(135deg, #3b82f6, #a855f7, #ec4899)',
-                                backgroundSize: '200% 200%',
-                                animation: 'liquid-flow 4s ease infinite'
-                            }}
-                        >
+                                backgroundImage: 'linear-gradient(180deg, #22d3ee 0%, #06b6d4 40%, #0e7490 100%)'
+                            }}>
                             {displayData.name}
                         </h1>
 
-                        <style jsx>{`
-                            @keyframes liquid-flow {
-                                0%, 100% { background-position: 0% 50%; }
-                                50% { background-position: 100% 50%; }
-                            }
-                        `}</style>
-
-                        <p className="text-xl text-blue-100/60 max-w-xl mx-auto mb-12">
+                        <p className="text-xl text-cyan-100/50 max-w-xl mx-auto mb-12">
                             {displayData.bio}
                         </p>
 
                         <div className="flex justify-center gap-4">
-                            <a
-                                href="#pour"
-                                className="px-8 py-4 rounded-full font-bold text-white"
-                                style={{ background: 'linear-gradient(90deg, #3b82f6, #a855f7)' }}
+                            <motion.a
+                                href="#explore"
+                                className="px-8 py-4 rounded-lg font-bold text-slate-900"
+                                style={{ background: 'linear-gradient(90deg, #22d3ee, #06b6d4)' }}
+                                whileHover={{ scale: 1.05 }}
                             >
-                                View Work
-                            </a>
-                            <a
-                                href="#fill"
-                                className="px-8 py-4 rounded-full font-bold border border-blue-400/30 hover:bg-blue-500/20 transition-all"
+                                Begin Descent
+                            </motion.a>
+                            <motion.a
+                                href="#surface"
+                                className="px-8 py-4 rounded-lg font-bold border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 transition-all"
+                                whileHover={{ scale: 1.05 }}
                             >
-                                Contact
-                            </a>
+                                Send Beacon
+                            </motion.a>
                         </div>
                     </motion.div>
                 </div>
             </section>
 
             {/* About */}
-            <section id="flow" className="py-32 px-6 relative z-10">
+            <section id="dive" className="py-32 px-6 relative z-10">
                 <div className="max-w-3xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <LiquidTank fillColor="rgba(168, 85, 247, 0.3)" level="40%">
-                            <div className="p-12">
-                                <div className="flex items-center gap-4 mb-8">
-                                    <FlaskConical className="w-10 h-10 text-purple-400" />
-                                    <h2 className="text-3xl font-bold text-purple-300">The Flow State</h2>
+                        <PortholeCard>
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500/30 to-cyan-700/30 flex items-center justify-center border border-cyan-400/30">
+                                    <Fish className="w-6 h-6 text-cyan-400" />
                                 </div>
-                                <p className="text-purple-100/60 leading-relaxed text-lg">
-                                    Like water finding its path, I create interfaces that flow naturally and
-                                    effortlessly. My approach blends fluid animations with intuitive interactions,
-                                    creating experiences that feel alive and responsive. Every transition is
-                                    deliberate, every motion purposeful. Currently flowing from {displayData.location}.
-                                </p>
+                                <h2 className="text-2xl font-bold text-cyan-300">Mission Brief</h2>
                             </div>
-                        </LiquidTank>
+                            <p className="text-cyan-100/60 leading-relaxed">
+                                Like the creatures of the deep that generate their own light in darkness,
+                                I illuminate complex technical challenges with elegant solutions. My work
+                                takes me into the depths of distributed systems, where pressure is high
+                                and visibility is low—but that's where the most fascinating architectures
+                                emerge. Currently stationed at {displayData.location}.
+                            </p>
+                            {/* Sonar ping indicator */}
+                            <div className="mt-8 flex items-center gap-4">
+                                <div className="relative w-16 h-16">
+                                    <motion.div
+                                        className="absolute inset-0 rounded-full border border-cyan-400/30"
+                                        animate={{ scale: [1, 2], opacity: [0.5, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                    />
+                                    <div className="absolute inset-0 rounded-full border border-cyan-400/50 flex items-center justify-center">
+                                        <motion.div
+                                            className="w-2 h-2 rounded-full bg-cyan-400"
+                                            animate={{ opacity: [0.5, 1, 0.5] }}
+                                            transition={{ duration: 1, repeat: Infinity }}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="text-xs text-cyan-400/50 uppercase">Signal Active</div>
+                                    <div className="text-cyan-300 font-mono">PING: 42ms</div>
+                                </div>
+                            </div>
+                        </PortholeCard>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Skills - Test tubes */}
-            <section id="mix" className="py-32 px-6 relative z-10">
+            {/* Skills - Glowing organisms */}
+            <section id="explore" className="py-32 px-6 relative z-10">
                 <div className="max-w-4xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-4 text-blue-300"
+                        className="text-3xl font-bold text-center mb-4 text-cyan-300"
                     >
-                        The Mix
+                        Bioluminescent Stack
                     </motion.h2>
-                    <p className="text-center text-blue-400/50 mb-16">Ingredients in my formula</p>
+                    <p className="text-center text-cyan-400/40 mb-16">Technologies that light the way</p>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {displayData.skills.map((skill, i) => {
-                            const colors = ['#3b82f6', '#a855f7', '#ec4899', '#22d3ee', '#14b8a6', '#f59e0b', '#ef4444', '#10b981'];
-                            return (
-                                <motion.div
-                                    key={skill}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    whileHover={{ y: -10 }}
-                                    className="text-center cursor-pointer"
-                                >
-                                    {/* Test tube */}
-                                    <div className="w-16 h-32 mx-auto mb-4 relative">
-                                        <div className="absolute inset-0 rounded-b-full bg-white/5 border-2 border-white/20 overflow-hidden">
-                                            <motion.div
-                                                className="absolute bottom-0 left-0 right-0 rounded-b-full"
-                                                style={{
-                                                    height: `${50 + Math.random() * 40}%`,
-                                                    background: colors[i % colors.length]
-                                                }}
-                                                animate={{
-                                                    height: [`${50 + Math.random() * 30}%`, `${60 + Math.random() * 30}%`]
-                                                }}
-                                                transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-                                            />
-                                        </div>
-                                        {/* Cap */}
-                                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-10 h-4 bg-white/10 rounded-t-lg border-2 border-white/20 border-b-0" />
-                                    </div>
-                                    <span className="font-bold text-white/80">{skill}</span>
-                                </motion.div>
-                            );
-                        })}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        {displayData.skills.map((skill, i) => (
+                            <GlowOrganism key={skill} skill={skill} index={i} />
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* Projects */}
-            <section id="pour" className="py-32 px-6 relative z-10">
+            {/* Projects - Porthole cards */}
+            <section id="discover" className="py-32 px-6 relative z-10">
                 <div className="max-w-5xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-16 text-purple-300"
+                        className="text-3xl font-bold text-center mb-16 text-cyan-300"
                     >
-                        Poured Work
+                        Deep Discoveries
                     </motion.h2>
                     <div className="grid md:grid-cols-2 gap-8">
                         {displayData.projects.map((project, i) => (
@@ -404,28 +500,34 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
                                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
                                 }}
                             >
-                                <LiquidTank
-                                    fillColor={i === 0 ? 'rgba(59, 130, 246, 0.4)' : 'rgba(236, 72, 153, 0.4)'}
-                                    level="30%"
-                                >
-                                    <div className="p-8 group">
-                                        <Waves className="w-12 h-12 text-white/30 mb-6 group-hover:text-white/50 transition-colors" />
-                                        <h3
-                                            className="text-2xl font-bold mb-3 text-transparent bg-clip-text"
-                                            style={{ backgroundImage: i === 0 ? 'linear-gradient(90deg, #3b82f6, #a855f7)' : 'linear-gradient(90deg, #ec4899, #f59e0b)' }}
+                                <PortholeCard className="h-full group">
+                                    {/* Creature silhouette bg */}
+                                    <div className="h-24 -mx-6 -mt-6 mb-4 relative overflow-hidden"
+                                        style={{
+                                            background: i === 0
+                                                ? 'linear-gradient(180deg, rgba(34,211,238,0.2), transparent)'
+                                                : 'linear-gradient(180deg, rgba(168,85,247,0.2), transparent)'
+                                        }}>
+                                        <motion.div
+                                            className="absolute inset-0 flex items-center justify-center opacity-20"
+                                            animate={{ x: [0, 10, 0] }}
+                                            transition={{ duration: 5, repeat: Infinity }}
                                         >
-                                            {project.name}
-                                        </h3>
-                                        <p className="text-blue-100/50 mb-4">{project.description}</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {project.technologies?.map((tech) => (
-                                                <span key={tech} className="px-3 py-1 text-sm text-blue-300 bg-blue-500/20 rounded-full border border-blue-400/20">
-                                                    {tech}
-                                                </span>
-                                            ))}
-                                        </div>
+                                            <Waves className="w-24 h-24" style={{ color: i === 0 ? '#22d3ee' : '#a855f7' }} />
+                                        </motion.div>
                                     </div>
-                                </LiquidTank>
+                                    <h3 className="text-xl font-bold text-cyan-300 mb-2 group-hover:text-cyan-200 transition-colors">
+                                        {project.name}
+                                    </h3>
+                                    <p className="text-cyan-100/50 mb-4">{project.description}</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.technologies?.map((tech) => (
+                                            <span key={tech} className="px-3 py-1 text-xs text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 rounded">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </PortholeCard>
                             </motion.div>
                         ))}
                     </div>
@@ -439,9 +541,9 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-16 text-blue-300"
+                        className="text-3xl font-bold text-center mb-16 text-cyan-300"
                     >
-                        Flow History
+                        Dive Log
                     </motion.h2>
                     {displayData.experience.map((exp, i) => (
                         <motion.div
@@ -450,18 +552,16 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                         >
-                            <LiquidTank fillColor="rgba(34, 211, 238, 0.2)" level="25%">
-                                <div className="p-6">
-                                    <div className="flex justify-between items-start flex-wrap gap-2 mb-2">
-                                        <h3 className="text-xl font-bold text-cyan-300">{exp.position}</h3>
-                                        <span className="px-4 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm">
-                                            {exp.startDate} - {exp.endDate}
-                                        </span>
-                                    </div>
-                                    <p className="text-purple-300 mb-2">{exp.company}</p>
-                                    <p className="text-cyan-100/50">{exp.description}</p>
+                            <PortholeCard>
+                                <div className="flex justify-between items-start flex-wrap gap-2 mb-2">
+                                    <h3 className="text-xl font-bold text-cyan-300">{exp.position}</h3>
+                                    <span className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm rounded">
+                                        {exp.startDate} — {exp.endDate}
+                                    </span>
                                 </div>
-                            </LiquidTank>
+                                <p className="text-purple-300 mb-2">{exp.company}</p>
+                                <p className="text-cyan-100/50">{exp.description}</p>
+                            </PortholeCard>
                         </motion.div>
                     ))}
                 </div>
@@ -474,9 +574,9 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-16 text-purple-300"
+                        className="text-3xl font-bold text-center mb-16 text-cyan-300"
                     >
-                        Source
+                        Training Depths
                     </motion.h2>
                     <div className="grid md:grid-cols-2 gap-6">
                         {displayData.education.map((edu, i) => (
@@ -486,14 +586,14 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                             >
-                                <LiquidTank fillColor="rgba(168, 85, 247, 0.2)" level="35%">
-                                    <div className="p-6">
-                                        <Droplets className="w-8 h-8 text-purple-400 mb-4" />
-                                        <h3 className="text-lg font-bold text-purple-300 mb-1">{edu.degree}</h3>
-                                        <p className="text-blue-300">{edu.school}</p>
-                                        <p className="text-sm text-purple-400/50">{edu.startDate} - {edu.endDate}</p>
+                                <PortholeCard>
+                                    <div className="w-10 h-10 rounded bg-gradient-to-br from-cyan-500/30 to-teal-600/30 flex items-center justify-center mb-4 border border-cyan-400/30">
+                                        <span className="text-lg">🐋</span>
                                     </div>
-                                </LiquidTank>
+                                    <h3 className="text-lg font-bold text-cyan-300 mb-1">{edu.degree}</h3>
+                                    <p className="text-purple-300">{edu.school}</p>
+                                    <p className="text-sm text-cyan-400/50">{edu.startDate} — {edu.endDate}</p>
+                                </PortholeCard>
                             </motion.div>
                         ))}
                     </div>
@@ -501,45 +601,43 @@ export default function LiquidFluidPage({ data }: { data?: PortfolioData }) {
             </section>
 
             {/* Contact */}
-            <section id="fill" className="py-32 px-6 relative z-10">
+            <section id="surface" className="py-32 px-6 relative z-10">
                 <div className="max-w-2xl mx-auto text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <LiquidTank fillColor="rgba(59, 130, 246, 0.3)" level="50%">
-                            <div className="p-12">
-                                <motion.div
-                                    animate={{ y: [0, -10, 0] }}
-                                    transition={{ duration: 3, repeat: Infinity }}
-                                >
-                                    <Droplets className="w-16 h-16 text-blue-400 mx-auto mb-8" />
-                                </motion.div>
-                                <h2 className="text-4xl font-bold mb-6 text-blue-300">Fill My Inbox</h2>
-                                <p className="text-blue-100/50 mb-8">
-                                    Ready to create something fluid together?
-                                </p>
-                                <div className="flex justify-center gap-6">
-                                    {[
-                                        { icon: Mail, href: `mailto:${displayData.email}` },
-                                        { icon: Github, href: displayData.links.github },
-                                        { icon: Linkedin, href: displayData.links.linkedin }
-                                    ].map(({ icon: Icon, href }, i) => (
-                                        <motion.a
-                                            key={i}
-                                            href={href}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            whileHover={{ scale: 1.1, y: -5 }}
-                                            className="p-4 bg-blue-500/20 rounded-xl border border-blue-400/30"
-                                        >
-                                            <Icon className="w-6 h-6 text-blue-400" />
-                                        </motion.a>
-                                    ))}
-                                </div>
+                        <PortholeCard>
+                            <motion.div
+                                animate={{ y: [0, -10, 0] }}
+                                transition={{ duration: 4, repeat: Infinity }}
+                            >
+                                <Waves className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                            </motion.div>
+                            <h2 className="text-3xl font-bold mb-4 text-cyan-300">Send a Signal</h2>
+                            <p className="text-cyan-100/50 mb-8">
+                                Ready to explore the depths together?
+                            </p>
+                            <div className="flex justify-center gap-4">
+                                {[
+                                    { icon: Mail, href: `mailto:${displayData.email}` },
+                                    { icon: Github, href: displayData.links.github },
+                                    { icon: Linkedin, href: displayData.links.linkedin }
+                                ].map(({ icon: Icon, href }, i) => (
+                                    <motion.a
+                                        key={i}
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        whileHover={{ scale: 1.1, y: -5 }}
+                                        className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20"
+                                    >
+                                        <Icon className="w-6 h-6 text-cyan-400" />
+                                    </motion.a>
+                                ))}
                             </div>
-                        </LiquidTank>
+                        </PortholeCard>
                     </motion.div>
                 </div>
             </section>

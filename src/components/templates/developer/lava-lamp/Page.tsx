@@ -1,321 +1,396 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Github, Linkedin, Zap, Sparkles } from 'lucide-react';
+import { Mail, Github, Linkedin, Thermometer, Gauge, Flame } from 'lucide-react';
 import { PortfolioData } from '../../types';
 
 const mockData: PortfolioData = {
-    name: "Groovy Dev",
-    role: "Creative Technologist",
-    email: "dev@lava.io",
+    name: "Forge Dev",
+    role: "Systems Architect",
+    email: "dev@forge.io",
     phone: "+1 555 000 0000",
-    location: "San Francisco, CA",
-    bio: "Flowing with the vibes. Creating experiences that make you feel good, man.",
-    skills: ["React", "Vue", "GSAP", "Three.js", "WebGL", "Creative Coding", "CSS", "Motion"],
-    experience: [{ company: "Psychedelic Labs", position: "Chief Vibe Officer", startDate: "2020", endDate: "Present", description: "Making the web groovy again", highlights: [] }],
+    location: "Silicon Foundry",
+    bio: "Forging robust systems from molten ideas. Where raw concepts become hardened solutions.",
+    skills: ["React", "Rust", "Go", "Kubernetes", "AWS", "Docker", "PostgreSQL", "Redis"],
+    experience: [{ company: "Metal Works Inc", position: "Principal Engineer", startDate: "2020", endDate: "Present", description: "Architecting high-temperature systems", highlights: [] }],
     education: [
-        { school: "Art Center", degree: "BFA New Media", field: "New Media", startDate: "2016", endDate: "2020" }
+        { school: "Tech Forge Academy", degree: "MS Computer Engineering", field: "Engineering", startDate: "2016", endDate: "2020" }
     ],
     projects: [
-        { name: "Mellow", description: "Ambient music visualizer", technologies: ["Three.js", "Web Audio"] },
-        { name: "Flow", description: "Fluid simulation art", technologies: ["WebGL", "GLSL"] }
+        { name: "Crucible", description: "High-performance data pipeline", technologies: ["Rust", "Kafka"] },
+        { name: "Anvil", description: "Distributed task scheduler", technologies: ["Go", "gRPC"] }
     ],
     links: { github: "https://github.com", linkedin: "https://linkedin.com" }
 };
 
-// Lava blob component
-const LavaBlob = ({ color, size, x, y, duration }: { color: string; size: number; x: string; y: string; duration: number }) => (
+// Molten metal drip component
+const MoltenDrip = ({ x, delay, color }: { x: string; delay: number; color: string }) => (
     <motion.div
-        className="absolute rounded-full blur-xl pointer-events-none"
-        style={{
-            width: size,
-            height: size,
-            left: x,
-            background: color,
-        }}
+        className="absolute top-0 pointer-events-none"
+        style={{ left: x }}
+        initial={{ y: -20 }}
         animate={{
-            y: [y, '-120%', y],
-            scale: [1, 1.3, 0.8, 1.2, 1],
-            borderRadius: ['50%', '40% 60%', '60% 40%', '30% 70%', '50%']
+            y: [0, 150, 300],
+            scaleY: [0.5, 1.5, 0.3],
+            opacity: [0, 1, 0]
         }}
         transition={{
-            duration,
+            duration: 4,
             repeat: Infinity,
-            ease: "easeInOut"
+            delay,
+            repeatDelay: 2
         }}
-    />
+    >
+        <div
+            className="w-4 h-12 rounded-full"
+            style={{
+                background: `linear-gradient(180deg, ${color}, transparent)`,
+                boxShadow: `0 0 20px ${color}, 0 0 40px ${color}50`
+            }}
+        />
+    </motion.div>
 );
 
-// Morphing background blob
-const MorphBlob = ({ color, index }: { color: string; index: number }) => (
+// Molten pool at bottom
+const MoltenPool = () => (
+    <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none overflow-hidden">
+        <motion.div
+            className="absolute inset-x-0 bottom-0 h-20"
+            style={{
+                background: 'linear-gradient(0deg, #f59e0b 0%, #ea580c 50%, transparent 100%)',
+                filter: 'blur(8px)'
+            }}
+            animate={{
+                opacity: [0.6, 0.8, 0.6],
+                scaleY: [1, 1.1, 1]
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+        />
+        {/* Surface bubbles */}
+        {[...Array(8)].map((_, i) => (
+            <motion.div
+                key={i}
+                className="absolute bottom-4 w-3 h-3 rounded-full"
+                style={{
+                    left: `${10 + i * 12}%`,
+                    background: 'radial-gradient(circle at 30% 30%, #fbbf24, #f59e0b)'
+                }}
+                animate={{
+                    y: [0, -10, 0],
+                    scale: [1, 1.3, 1],
+                    opacity: [0.8, 1, 0.8]
+                }}
+                transition={{ duration: 1.5 + i * 0.2, repeat: Infinity, delay: i * 0.3 }}
+            />
+        ))}
+    </div>
+);
+
+// Industrial gauge component
+const TempGauge = ({ value, label }: { value: number; label: string }) => (
+    <div className="relative w-20 h-20">
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+            {/* Gauge background */}
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#44403c" strokeWidth="8" />
+            {/* Gauge value */}
+            <motion.circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="url(#gaugeGradient)"
+                strokeWidth="8"
+                strokeLinecap="round"
+                strokeDasharray={`${value * 2.83} 283`}
+                transform="rotate(-90 50 50)"
+                animate={{ strokeDasharray: [`${value * 2.83} 283`, `${value * 2.83 + 10} 283`, `${value * 2.83} 283`] }}
+                transition={{ duration: 2, repeat: Infinity }}
+            />
+            <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#f59e0b" />
+                    <stop offset="100%" stopColor="#ef4444" />
+                </linearGradient>
+            </defs>
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-amber-400 font-bold text-sm">{value}%</span>
+            <span className="text-stone-500 text-xs">{label}</span>
+        </div>
+    </div>
+);
+
+// Industrial panel with rivets
+const IndustrialPanel = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+    <div className={`relative ${className}`}>
+        {/* Main panel */}
+        <div className="relative rounded-lg overflow-hidden"
+            style={{
+                background: 'linear-gradient(145deg, #292524, #1c1917)',
+                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.05), inset 0 -2px 4px rgba(0,0,0,0.3), 0 10px 40px rgba(0,0,0,0.5)'
+            }}>
+            {/* Rivet corners */}
+            {['-top-0.5 -left-0.5', '-top-0.5 -right-0.5', '-bottom-0.5 -left-0.5', '-bottom-0.5 -right-0.5'].map((pos, i) => (
+                <div key={i} className={`absolute ${pos} w-3 h-3 rounded-full bg-gradient-to-br from-stone-500 to-stone-700 border border-stone-600`} />
+            ))}
+            {/* Content */}
+            <div className="p-6">{children}</div>
+        </div>
+    </div>
+);
+
+// Heat distortion text effect
+const HeatText = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
     <motion.div
-        className="absolute w-[600px] h-[600px] blur-3xl opacity-40 pointer-events-none"
-        style={{ background: color }}
+        className={className}
         animate={{
-            borderRadius: [
-                "30% 70% 70% 30% / 30% 30% 70% 70%",
-                "70% 30% 30% 70% / 70% 70% 30% 30%",
-                "50% 50% 50% 50% / 50% 50% 50% 50%",
-                "30% 70% 70% 30% / 30% 30% 70% 70%"
-            ],
-            x: [0, 100, -50, 0],
-            y: [0, -50, 100, 0],
-            scale: [1, 1.2, 0.9, 1]
+            filter: ['blur(0px)', 'blur(0.5px)', 'blur(0px)']
         }}
-        transition={{
-            duration: 15 + index * 3,
-            repeat: Infinity,
-            ease: "easeInOut"
+        transition={{ duration: 0.1, repeat: Infinity }}
+        style={{
+            textShadow: '0 0 30px rgba(245,158,11,0.5), 0 0 60px rgba(234,88,12,0.3)'
         }}
-    />
+    >
+        {children}
+    </motion.div>
 );
 
 export default function LavaLampPage({ data }: { data?: PortfolioData }) {
     const displayData = data || mockData;
 
-    const groovyColors = [
-        'radial-gradient(circle, #ec4899, #be185d)',
-        'radial-gradient(circle, #f97316, #ea580c)',
-        'radial-gradient(circle, #a855f7, #7c3aed)',
-        'radial-gradient(circle, #06b6d4, #0891b2)',
-        'radial-gradient(circle, #eab308, #ca8a04)'
-    ];
+    const metalColors = ['#f59e0b', '#ea580c', '#dc2626', '#b45309', '#92400e'];
 
     return (
-        <div className="min-h-screen overflow-hidden relative" style={{
-            background: 'linear-gradient(180deg, #1e1b4b 0%, #312e81 30%, #4c1d95 60%, #581c87 100%)'
+        <div className="min-h-screen overflow-hidden relative font-mono" style={{
+            background: 'linear-gradient(180deg, #0c0a09 0%, #1c1917 30%, #292524 60%, #1c1917 100%)'
         }}>
-            {/* Morphing background blobs */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <MorphBlob color="radial-gradient(circle, rgba(236,72,153,0.4), transparent)" index={0} />
-                <div style={{ position: 'absolute', right: '-10%', top: '20%' }}>
-                    <MorphBlob color="radial-gradient(circle, rgba(249,115,22,0.3), transparent)" index={1} />
-                </div>
-                <div style={{ position: 'absolute', left: '30%', bottom: '-20%' }}>
-                    <MorphBlob color="radial-gradient(circle, rgba(168,85,247,0.3), transparent)" index={2} />
-                </div>
+            {/* Molten pool at bottom */}
+            <MoltenPool />
+
+            {/* Dripping metal from top */}
+            <div className="fixed top-0 left-0 right-0 pointer-events-none">
+                <MoltenDrip x="15%" delay={0} color="#f59e0b" />
+                <MoltenDrip x="35%" delay={1.5} color="#ea580c" />
+                <MoltenDrip x="55%" delay={3} color="#dc2626" />
+                <MoltenDrip x="75%" delay={0.8} color="#f59e0b" />
+                <MoltenDrip x="90%" delay={2.2} color="#ea580c" />
             </div>
 
-            {/* Rising lava blobs */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <LavaBlob color={groovyColors[0]} size={200} x="10%" y="100%" duration={12} />
-                <LavaBlob color={groovyColors[1]} size={150} x="30%" y="100%" duration={10} />
-                <LavaBlob color={groovyColors[2]} size={180} x="50%" y="100%" duration={14} />
-                <LavaBlob color={groovyColors[3]} size={120} x="70%" y="100%" duration={11} />
-                <LavaBlob color={groovyColors[4]} size={160} x="85%" y="100%" duration={13} />
+            {/* Ambient glow */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full opacity-20"
+                    style={{ background: 'radial-gradient(circle, #f59e0b, transparent)', filter: 'blur(100px)' }} />
+                <div className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-15"
+                    style={{ background: 'radial-gradient(circle, #ea580c, transparent)', filter: 'blur(80px)' }} />
             </div>
 
-            {/* Navigation - Groovy floating */}
-            <nav className="fixed top-0 w-full z-50 px-6 py-6">
-                <motion.div
-                    initial={{ y: -50 }}
-                    animate={{ y: 0 }}
-                    className="max-w-4xl mx-auto"
-                >
-                    <motion.div
-                        animate={{ y: [0, -5, 0] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="bg-white/10 backdrop-blur-lg rounded-full px-8 py-4 border border-white/20"
-                    >
+            {/* Navigation */}
+            <nav className="fixed top-0 w-full z-50 px-6 py-4">
+                <div className="max-w-5xl mx-auto">
+                    <IndustrialPanel>
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <motion.span
-                                    animate={{ rotate: [0, 360] }}
-                                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                                    className="text-3xl"
+                                <motion.div
+                                    animate={{ opacity: [0.8, 1, 0.8] }}
+                                    transition={{ duration: 1.5, repeat: Infinity }}
                                 >
-                                    ☮️
-                                </motion.span>
-                                <span className="text-xl font-bold text-pink-300">GROOVY</span>
+                                    <Flame className="w-8 h-8 text-amber-500" />
+                                </motion.div>
+                                <span className="text-xl font-bold text-amber-400 tracking-widest">FORGE</span>
+                                <div className="w-px h-6 bg-stone-600 mx-2" />
+                                <span className="text-xs text-stone-500">TEMP: 1200°C</span>
                             </div>
-                            <div className="flex gap-6 text-sm font-medium text-purple-200/80">
-                                {['Vibes', 'Flow', 'Energy', 'Connect'].map((item) => (
-                                    <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-pink-300 transition-colors">
+                            <div className="flex gap-6 text-sm text-stone-400">
+                                {['Core', 'Alloys', 'Output', 'Signal'].map((item) => (
+                                    <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-amber-400 transition-colors uppercase tracking-wider">
                                         {item}
                                     </a>
                                 ))}
                             </div>
                         </div>
-                    </motion.div>
-                </motion.div>
+                    </IndustrialPanel>
+                </div>
             </nav>
 
-            {/* Hero - Psychedelic center */}
+            {/* Hero */}
             <section className="min-h-screen flex items-center justify-center px-6 relative">
                 <div className="text-center max-w-4xl mx-auto relative z-10">
-                    {/* Central lava lamp shape */}
+                    {/* Crucible visualization */}
                     <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="relative inline-block mb-12"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-12"
                     >
-                        {/* Lamp glass container */}
-                        <div className="relative w-48 h-80 mx-auto">
-                            {/* Base */}
-                            <div className="absolute bottom-0 w-full h-16 bg-gradient-to-b from-zinc-600 to-zinc-800 rounded-b-3xl" />
-                            {/* Top cap */}
-                            <div className="absolute top-0 w-full h-8 bg-gradient-to-b from-zinc-800 to-zinc-600 rounded-t-full" />
-                            {/* Glass */}
-                            <div className="absolute top-6 bottom-12 left-4 right-4 bg-gradient-to-b from-purple-900/50 to-indigo-900/50 rounded-[100px] border border-white/10 overflow-hidden">
-                                {/* Internal blobs */}
-                                {[...Array(4)].map((_, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="absolute w-16 h-24 rounded-[50%] blur-sm"
+                        <div className="relative w-64 h-48 mx-auto">
+                            {/* Crucible container */}
+                            <div className="absolute bottom-0 w-full h-36 rounded-b-3xl overflow-hidden"
+                                style={{
+                                    background: 'linear-gradient(180deg, #44403c, #292524)',
+                                    boxShadow: 'inset 0 10px 30px rgba(0,0,0,0.5)'
+                                }}>
+                                {/* Molten content */}
+                                <motion.div
+                                    className="absolute bottom-0 left-2 right-2 rounded-b-2xl"
+                                    style={{
+                                        height: '70%',
+                                        background: 'linear-gradient(0deg, #f59e0b, #ea580c 50%, #dc2626)'
+                                    }}
+                                    animate={{
+                                        height: ['65%', '75%', '65%']
+                                    }}
+                                    transition={{ duration: 4, repeat: Infinity }}
+                                >
+                                    {/* Surface glow */}
+                                    <div className="absolute inset-x-0 top-0 h-4"
                                         style={{
-                                            left: `${20 + (i % 2) * 30}%`,
-                                            background: groovyColors[i % groovyColors.length]
-                                        }}
-                                        animate={{
-                                            y: [240 - i * 50, -20, 240 - i * 50],
-                                            scale: [1, 0.8, 1.2, 0.9, 1],
-                                            borderRadius: ['50%', '40% 60%', '60% 40%', '50%']
-                                        }}
-                                        transition={{
-                                            duration: 6 + i * 2,
-                                            repeat: Infinity,
-                                            ease: "easeInOut",
-                                            delay: i * 1.5
-                                        }}
-                                    />
-                                ))}
+                                            background: 'linear-gradient(180deg, #fbbf24, transparent)',
+                                            filter: 'blur(4px)'
+                                        }} />
+                                    {/* Bubbles */}
+                                    {[...Array(5)].map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            className="absolute w-2 h-2 rounded-full bg-yellow-300/60"
+                                            style={{ left: `${15 + i * 18}%`, bottom: '20%' }}
+                                            animate={{ y: [0, -30], opacity: [1, 0] }}
+                                            transition={{ duration: 1, repeat: Infinity, delay: i * 0.4 }}
+                                        />
+                                    ))}
+                                </motion.div>
                             </div>
+                            {/* Crucible rim */}
+                            <div className="absolute bottom-32 left-1/2 -translate-x-1/2 w-72 h-6 rounded-t-lg"
+                                style={{ background: 'linear-gradient(180deg, #57534e, #44403c)' }} />
+                            {/* Heat waves above */}
+                            <motion.div
+                                className="absolute -top-4 left-1/2 -translate-x-1/2 w-48 h-16 opacity-30"
+                                style={{ background: 'linear-gradient(0deg, rgba(251,191,36,0.3), transparent)' }}
+                                animate={{ scaleY: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            />
                         </div>
                     </motion.div>
 
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
+                        transition={{ delay: 0.3 }}
                     >
-                        <motion.p
-                            animate={{ opacity: [0.5, 1, 0.5] }}
-                            transition={{ duration: 3, repeat: Infinity }}
-                            className="text-pink-400 font-medium tracking-widest uppercase mb-4"
-                        >
-                            ✨ {displayData.role} ✨
-                        </motion.p>
+                        <div className="inline-flex items-center gap-3 px-4 py-2 mb-8 rounded border border-amber-900/50 bg-stone-900/50">
+                            <Thermometer className="w-4 h-4 text-amber-500" />
+                            <span className="text-amber-400/80 text-sm uppercase tracking-widest">{displayData.role}</span>
+                        </div>
 
-                        <h1 className="text-6xl md:text-8xl font-black mb-6 text-transparent bg-clip-text"
+                        <HeatText className="text-5xl md:text-7xl font-black mb-6 text-transparent bg-clip-text"
                             style={{
-                                backgroundImage: 'linear-gradient(45deg, #ec4899, #f97316, #eab308, #22c55e, #06b6d4, #8b5cf6, #ec4899)',
-                                backgroundSize: '300% 300%',
-                                animation: 'gradient-shift 5s ease infinite'
-                            }}>
-                            {displayData.name}
-                        </h1>
+                                backgroundImage: 'linear-gradient(180deg, #fbbf24 0%, #f59e0b 30%, #ea580c 60%, #dc2626 100%)'
+                            } as any}>
+                            <h1>{displayData.name}</h1>
+                        </HeatText>
 
-                        <style jsx>{`
-                            @keyframes gradient-shift {
-                                0%, 100% { background-position: 0% 50%; }
-                                50% { background-position: 100% 50%; }
-                            }
-                        `}</style>
-
-                        <p className="text-xl text-purple-200/70 max-w-xl mx-auto">
+                        <p className="text-lg text-stone-400 max-w-xl mx-auto mb-12">
                             {displayData.bio}
                         </p>
+
+                        <div className="flex justify-center gap-4">
+                            <a href="#output" className="px-8 py-3 rounded font-bold text-stone-900 transition-all hover:scale-105"
+                                style={{ background: 'linear-gradient(90deg, #f59e0b, #ea580c)' }}>
+                                View Output
+                            </a>
+                            <a href="#signal" className="px-8 py-3 rounded font-bold border border-amber-600/50 text-amber-400 hover:bg-amber-500/10 transition-all">
+                                Send Signal
+                            </a>
+                        </div>
                     </motion.div>
                 </div>
             </section>
 
             {/* About */}
-            <section id="vibes" className="py-32 px-6 relative">
+            <section id="core" className="py-32 px-6 relative z-10">
                 <div className="max-w-3xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="relative p-12 rounded-[50px] overflow-hidden"
-                        style={{
-                            background: 'linear-gradient(135deg, rgba(236,72,153,0.2), rgba(168,85,247,0.2))',
-                            backdropFilter: 'blur(20px)',
-                            border: '2px solid rgba(255,255,255,0.1)'
-                        }}
                     >
-                        <div className="flex items-center gap-4 mb-8">
-                            <motion.span
-                                animate={{ scale: [1, 1.2, 1] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="text-5xl"
-                            >
-                                🌈
-                            </motion.span>
-                            <h2 className="text-3xl font-bold text-pink-300">Good Vibes Only</h2>
-                        </div>
-                        <p className="text-purple-100/70 leading-relaxed text-lg">
-                            Like the hypnotic flow of a lava lamp, I believe in the power of smooth transitions
-                            and organic movement. My work pulses with color and life—never static, always evolving.
-                            Whether you're looking for groovy animations or far-out experiences, I'm your trip guide
-                            through the digital cosmos. Currently vibing in {displayData.location}. ✌️
-                        </p>
+                        <IndustrialPanel className="mb-0">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-12 h-12 rounded bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center">
+                                    <Gauge className="w-6 h-6 text-amber-200" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-amber-400">Core Systems</h2>
+                            </div>
+                            <p className="text-stone-400 leading-relaxed">
+                                Like metal in a crucible, I transform raw requirements into refined, high-performance
+                                systems. My process involves intense focus on fundamentals—heat treating ideas until
+                                they achieve maximum strength and durability. Every system I architect is forged to
+                                withstand production pressures. Operating from {displayData.location}.
+                            </p>
+                            <div className="flex gap-6 mt-8">
+                                <TempGauge value={95} label="UPTIME" />
+                                <TempGauge value={87} label="PERF" />
+                                <TempGauge value={92} label="SCALE" />
+                            </div>
+                        </IndustrialPanel>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Skills - Floating bubbles */}
-            <section id="energy" className="py-32 px-6">
+            {/* Skills - Molten badges */}
+            <section id="alloys" className="py-32 px-6 relative z-10">
                 <div className="max-w-4xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-4 text-pink-300"
+                        className="text-3xl font-bold text-center mb-4 text-amber-400"
                     >
-                        Power Sources ⚡
+                        Alloy Components
                     </motion.h2>
-                    <p className="text-center text-purple-300/60 mb-16">The energy that fuels the flow</p>
+                    <p className="text-center text-stone-500 mb-16 uppercase tracking-widest text-sm">Materials in the mix</p>
 
-                    <div className="flex flex-wrap justify-center gap-8">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {displayData.skills.map((skill, i) => (
                             <motion.div
                                 key={skill}
-                                initial={{ scale: 0, rotate: -180 }}
-                                whileInView={{ scale: 1, rotate: 0 }}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: i * 0.1, type: "spring", bounce: 0.5 }}
-                                whileHover={{ scale: 1.2, rotate: 10 }}
-                                animate={{
-                                    y: [0, -20, 0],
-                                }}
-                                className="relative cursor-pointer"
-                                style={{
-                                    animation: `float ${3 + i * 0.5}s ease-in-out infinite`,
-                                    animationDelay: `${i * 0.3}s`
-                                }}
+                                transition={{ delay: i * 0.1 }}
+                                whileHover={{ scale: 1.05, y: -5 }}
+                                className="cursor-pointer"
                             >
-                                <div
-                                    className="w-28 h-28 rounded-full flex items-center justify-center text-white font-bold text-center p-4 text-sm"
-                                    style={{
-                                        background: groovyColors[i % groovyColors.length],
-                                        boxShadow: `0 10px 40px ${i % 2 === 0 ? 'rgba(236,72,153,0.4)' : 'rgba(168,85,247,0.4)'}`
-                                    }}
-                                >
-                                    {skill}
-                                </div>
+                                <IndustrialPanel>
+                                    <div className="text-center">
+                                        <motion.div
+                                            className="w-12 h-12 mx-auto mb-3 rounded-lg flex items-center justify-center"
+                                            style={{
+                                                background: `linear-gradient(135deg, ${metalColors[i % metalColors.length]}, ${metalColors[(i + 1) % metalColors.length]})`
+                                            }}
+                                            animate={{ boxShadow: [`0 0 20px ${metalColors[i % metalColors.length]}40`, `0 0 30px ${metalColors[i % metalColors.length]}60`, `0 0 20px ${metalColors[i % metalColors.length]}40`] }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                        >
+                                            <span className="text-stone-900 font-bold text-lg">{skill.charAt(0)}</span>
+                                        </motion.div>
+                                        <span className="text-stone-300 font-medium text-sm">{skill}</span>
+                                    </div>
+                                </IndustrialPanel>
                             </motion.div>
                         ))}
                     </div>
-
-                    <style jsx>{`
-                        @keyframes float {
-                            0%, 100% { transform: translateY(0px); }
-                            50% { transform: translateY(-20px); }
-                        }
-                    `}</style>
                 </div>
             </section>
 
             {/* Projects */}
-            <section id="flow" className="py-32 px-6">
+            <section id="output" className="py-32 px-6 relative z-10">
                 <div className="max-w-5xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-16 text-pink-300"
+                        className="text-3xl font-bold text-center mb-16 text-amber-400"
                     >
-                        Far Out Projects 🚀
+                        Forged Output
                     </motion.h2>
                     <div className="grid md:grid-cols-2 gap-8">
                         {displayData.projects.map((project, i) => (
@@ -324,58 +399,29 @@ export default function LavaLampPage({ data }: { data?: PortfolioData }) {
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                whileHover={{ scale: 1.02, rotate: 1 }}
-                                className={`group relative rounded-[40px] overflow-hidden ${project.url || project.github ? 'cursor-pointer' : ''}`}
-                                style={{
-                                    background: 'linear-gradient(135deg, rgba(236,72,153,0.2), rgba(168,85,247,0.2))',
-                                    backdropFilter: 'blur(10px)',
-                                    border: '2px solid rgba(255,255,255,0.1)'
-                                }}
+                                whileHover={{ y: -10 }}
+                                className={project.url || project.github ? 'cursor-pointer' : ''}
                                 onClick={() => {
                                     const url = project.url || project.github;
                                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
                                 }}
                             >
-                                {/* Animated gradient header */}
-                                <div className="h-40 relative overflow-hidden">
-                                    <motion.div
-                                        className="absolute inset-0"
-                                        style={{
-                                            background: `linear-gradient(45deg, ${i === 0 ? '#ec4899, #f97316' : '#8b5cf6, #06b6d4'})`
-                                        }}
-                                        animate={{
-                                            backgroundPosition: ['0% 0%', '100% 100%', '0% 0%']
-                                        }}
-                                        transition={{ duration: 5, repeat: Infinity }}
-                                    />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <motion.span
-                                            animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
-                                            transition={{ duration: 3, repeat: Infinity }}
-                                            className="text-6xl"
-                                        >
-                                            {i === 0 ? '🎵' : '🌊'}
-                                        </motion.span>
-                                    </div>
-                                </div>
-
-                                <div className="p-8">
-                                    <h3 className="text-2xl font-bold text-pink-300 mb-3 group-hover:text-white transition-colors">
+                                <IndustrialPanel className="group h-full">
+                                    {/* Top glow bar */}
+                                    <div className="h-1 rounded-full mb-6"
+                                        style={{ background: `linear-gradient(90deg, ${metalColors[i]}, ${metalColors[i + 1]})` }} />
+                                    <h3 className="text-xl font-bold text-amber-400 mb-3 group-hover:text-amber-300 transition-colors">
                                         {project.name}
                                     </h3>
-                                    <p className="text-purple-200/60 mb-4">{project.description}</p>
+                                    <p className="text-stone-500 mb-4">{project.description}</p>
                                     <div className="flex flex-wrap gap-2">
-                                        {project.technologies?.map((tech, j) => (
-                                            <span
-                                                key={tech}
-                                                className="px-4 py-2 rounded-full text-white text-sm font-medium"
-                                                style={{ background: groovyColors[(i + j) % groovyColors.length] }}
-                                            >
+                                        {project.technologies?.map((tech) => (
+                                            <span key={tech} className="px-3 py-1 text-xs text-amber-400 bg-amber-500/10 border border-amber-600/30 rounded uppercase tracking-wider">
                                                 {tech}
                                             </span>
                                         ))}
                                     </div>
-                                </div>
+                                </IndustrialPanel>
                             </motion.div>
                         ))}
                     </div>
@@ -383,15 +429,15 @@ export default function LavaLampPage({ data }: { data?: PortfolioData }) {
             </section>
 
             {/* Experience */}
-            <section className="py-32 px-6">
+            <section className="py-32 px-6 relative z-10">
                 <div className="max-w-4xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-16 text-pink-300"
+                        className="text-3xl font-bold text-center mb-16 text-amber-400"
                     >
-                        The Journey 🌙
+                        Forge History
                     </motion.h2>
                     {displayData.experience.map((exp, i) => (
                         <motion.div
@@ -399,61 +445,49 @@ export default function LavaLampPage({ data }: { data?: PortfolioData }) {
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            className="relative pl-12 pb-8 border-l-4 border-pink-500/50"
                         >
-                            <motion.div
-                                className="absolute left-0 top-0 -translate-x-[14px] w-6 h-6 rounded-full"
-                                style={{ background: groovyColors[0] }}
-                                animate={{ scale: [1, 1.3, 1] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                            <div className="rounded-[30px] p-6"
-                                style={{
-                                    background: 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(168,85,247,0.15))',
-                                    backdropFilter: 'blur(10px)',
-                                    border: '1px solid rgba(255,255,255,0.1)'
-                                }}>
+                            <IndustrialPanel>
                                 <div className="flex justify-between items-start flex-wrap gap-2 mb-2">
-                                    <h3 className="text-xl font-bold text-pink-300">{exp.position}</h3>
-                                    <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-sm">{exp.startDate} - {exp.endDate}</span>
+                                    <h3 className="text-xl font-bold text-amber-400">{exp.position}</h3>
+                                    <span className="px-3 py-1 bg-amber-500/10 border border-amber-600/30 text-amber-500 text-sm rounded">
+                                        {exp.startDate} — {exp.endDate}
+                                    </span>
                                 </div>
                                 <p className="text-orange-400 mb-2">{exp.company}</p>
-                                <p className="text-purple-200/60">{exp.description}</p>
-                            </div>
+                                <p className="text-stone-500">{exp.description}</p>
+                            </IndustrialPanel>
                         </motion.div>
                     ))}
                 </div>
             </section>
 
             {/* Education */}
-            <section className="py-32 px-6">
+            <section className="py-32 px-6 relative z-10">
                 <div className="max-w-4xl mx-auto">
                     <motion.h2
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        className="text-4xl font-bold text-center mb-16 text-pink-300"
+                        className="text-3xl font-bold text-center mb-16 text-amber-400"
                     >
-                        School of Rock 🎸
+                        Foundation
                     </motion.h2>
                     <div className="grid md:grid-cols-2 gap-6">
                         {displayData.education.map((edu, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="rounded-[30px] p-6"
-                                style={{
-                                    background: 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(168,85,247,0.15))',
-                                    backdropFilter: 'blur(10px)',
-                                    border: '1px solid rgba(255,255,255,0.1)'
-                                }}
                             >
-                                <span className="text-3xl block mb-4">🎓</span>
-                                <h3 className="text-lg font-bold text-pink-300">{edu.degree}</h3>
-                                <p className="text-orange-400">{edu.school}</p>
-                                <p className="text-sm text-purple-300/50">{edu.startDate} - {edu.endDate}</p>
+                                <IndustrialPanel>
+                                    <div className="w-10 h-10 rounded bg-gradient-to-br from-amber-600 to-orange-700 flex items-center justify-center mb-4">
+                                        <span className="text-lg">🔥</span>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-amber-400 mb-1">{edu.degree}</h3>
+                                    <p className="text-orange-400">{edu.school}</p>
+                                    <p className="text-sm text-stone-500">{edu.startDate} — {edu.endDate}</p>
+                                </IndustrialPanel>
                             </motion.div>
                         ))}
                     </div>
@@ -461,50 +495,43 @@ export default function LavaLampPage({ data }: { data?: PortfolioData }) {
             </section>
 
             {/* Contact */}
-            <section id="connect" className="py-32 px-6">
+            <section id="signal" className="py-32 px-6 relative z-10">
                 <div className="max-w-2xl mx-auto text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <motion.span
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                            className="text-7xl block mb-8"
-                        >
-                            ☮️
-                        </motion.span>
-                        <h2 className="text-4xl font-bold mb-6 text-transparent bg-clip-text"
-                            style={{
-                                backgroundImage: 'linear-gradient(45deg, #ec4899, #f97316, #eab308)',
-                            }}>
-                            Drop a Peace Sign
-                        </h2>
-                        <p className="text-purple-200/60 mb-12">
-                            Let's make something groovy together
-                        </p>
-                        <div className="flex justify-center gap-6">
-                            {[
-                                { icon: Mail, href: `mailto:${displayData.email}`, bg: groovyColors[0] },
-                                { icon: Github, href: displayData.links.github, bg: groovyColors[2] },
-                                { icon: Linkedin, href: displayData.links.linkedin, bg: groovyColors[3] }
-                            ].map(({ icon: Icon, href, bg }, i) => (
-                                <motion.a
-                                    key={i}
-                                    href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    whileHover={{ scale: 1.2, rotate: 10 }}
-                                    animate={{ y: [0, -10, 0] }}
-                                    transition={{ y: { duration: 2, repeat: Infinity, delay: i * 0.3 } }}
-                                    className="p-4 rounded-full shadow-lg"
-                                    style={{ background: bg }}
-                                >
-                                    <Icon className="w-6 h-6 text-white" />
-                                </motion.a>
-                            ))}
-                        </div>
+                        <IndustrialPanel>
+                            <motion.div
+                                animate={{ opacity: [0.8, 1, 0.8] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
+                                <Flame className="w-16 h-16 text-amber-500 mx-auto mb-6" />
+                            </motion.div>
+                            <h2 className="text-3xl font-bold mb-4 text-amber-400">Send a Signal</h2>
+                            <p className="text-stone-500 mb-8">
+                                Ready to forge something exceptional together?
+                            </p>
+                            <div className="flex justify-center gap-4">
+                                {[
+                                    { icon: Mail, href: `mailto:${displayData.email}` },
+                                    { icon: Github, href: displayData.links.github },
+                                    { icon: Linkedin, href: displayData.links.linkedin }
+                                ].map(({ icon: Icon, href }, i) => (
+                                    <motion.a
+                                        key={i}
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        whileHover={{ scale: 1.1, y: -5 }}
+                                        className="p-4 rounded bg-stone-800 border border-stone-700 hover:border-amber-600/50 transition-colors"
+                                    >
+                                        <Icon className="w-6 h-6 text-amber-500" />
+                                    </motion.a>
+                                ))}
+                            </div>
+                        </IndustrialPanel>
                     </motion.div>
                 </div>
             </section>
