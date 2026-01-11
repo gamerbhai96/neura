@@ -1,4 +1,37 @@
+# Robots.txt for Neura Studio
+# https://neura-studio.vercel.app
+
+# Allow all crawlers
 User-agent: *
 Allow: /
 
+# Explicitly allow AI crawlers for GEO (Generative Engine Optimization)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Sitemap location
 Sitemap: https://neura-studio.vercel.app/sitemap.xml
+
+# LLMs.txt for AI chatbots
+# See: https://neura-studio.vercel.app/llms.txt

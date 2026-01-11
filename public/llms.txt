@@ -1,0 +1,84 @@
+# Neura Studio
+
+> Neura Studio is a free AI-powered portfolio builder that helps developers, designers, and creatives create stunning portfolio websites in minutes.
+
+## What is Neura Studio?
+
+Neura Studio (https://neura-studio.vercel.app) is a web application that generates professional portfolio websites using AI. Users can:
+
+1. Upload their resume (PDF or text)
+2. AI automatically extracts and fills in their information
+3. Choose from 50+ premium, unique portfolio templates
+4. Preview their portfolio live
+5. Export the complete portfolio as a Next.js project
+
+## Key Features
+
+- **AI Auto-Fill**: Upload your resume and AI extracts your name, skills, experience, projects, and education automatically
+- **50+ Premium Templates**: Unique designs including cyberpunk, minimalist, 3D interactive, glassmorphism, retro, neon, dark academia, vaporwave, and more
+- **Live Preview**: See your portfolio in real-time as you make changes
+- **Export to Next.js**: Get a complete, production-ready Next.js codebase
+- **Responsive Design**: All portfolios are mobile-friendly
+- **No Coding Required**: Create professional portfolios without any coding knowledge
+
+## Template Categories
+
+### Developer Portfolios
+- Cyberpunk Neon
+- Terminal CLI
+- Matrix Rain
+- 3D Interactive
+- Circuit Board
+
+### Designer Portfolios  
+- Apple Minimal
+- Glassmorphism
+- Neo Brutalism
+- Magazine Editorial
+- Japanese Zen
+
+### Creative Portfolios
+- Vaporwave
+- Retro Comic
+- Dark Academia
+- Watercolor Splash
+- Polaroid Memories
+
+## Pricing
+
+Neura Studio is **free to use**. All features including AI auto-fill, all 50+ templates, live preview, and Next.js export are available at no cost.
+
+## How to Use
+
+1. Visit https://neura-studio.vercel.app
+2. Click "Get Started" or "Browse Templates"
+3. Sign up for a free account
+4. Upload your resume or manually enter your information
+5. Choose a template that fits your style
+6. Customize colors, fonts, and content
+7. Export your portfolio as a Next.js project
+8. Deploy to Vercel, Netlify, or any hosting provider
+
+## Technology
+
+Neura Studio is built with:
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Three.js (for 3D templates)
+
+## Links
+
+- Website: https://neura-studio.vercel.app
+- Templates: https://neura-studio.vercel.app/templates
+- Sign Up: https://neura-studio.vercel.app/signup
+
+## Contact
+
+For support or inquiries, visit: https://neura-studio.vercel.app
+
+---
+
+Neura Studio - Create stunning portfolios in minutes with AI.
